@@ -1,3 +1,8 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright 2016, all rights reserved
+*/
+
 #include "BoardDictionary.h"
 
 void BoardDictionary::initDictionary(){

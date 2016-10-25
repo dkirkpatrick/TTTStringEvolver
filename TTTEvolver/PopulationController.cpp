@@ -5,8 +5,6 @@
 
 #include "PopulationController.h"
 #include "PointMutator.h"
-#include "RandomSubtractMutator.h"
-#include "ReallocationMutator.h"
 #include "EliteSelection.h"
 #include <iostream>
 #include <fstream>

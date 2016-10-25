@@ -3,13 +3,13 @@
 *	Copyright 2016, all rights reserved
 */
 
-
-#ifndef StructHeader_H_
-#define StructHeader_H_
-
 #include <vector>
 #include <cmath>
 #include <memory>
+
+
+#ifndef StructHeader_H_
+#define StructHeader_H_
 
 struct Strategy{ 
 	std::vector<int> PlayArray;
@@ -26,5 +26,7 @@ struct LineOfDescentNode{
 	std::shared_ptr<LineOfDescentNode> parent;
 	Strategy m_Strategy; 
 };
+
+
 
 #endif // !StructHeader_H_

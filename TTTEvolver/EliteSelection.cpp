@@ -1,3 +1,8 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright 2016, all rights reserved
+*/
+
 #include "EliteSelection.h"
 
 EliteSelector::EliteSelector(double rateSel, int numEval) : Selector(rateSel, numEval){}

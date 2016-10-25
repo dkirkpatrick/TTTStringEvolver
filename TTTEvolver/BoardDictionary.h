@@ -1,6 +1,10 @@
 #include <map>
 #include <vector>
 
+#ifndef __BOARDDICTIONARY__
+#define __BOARDDICTIONARY__
+
+
 class BoardDictionary {
 public: 
 	BoardDictionary() {
@@ -15,11 +19,5 @@ private:
 	std::map<int, std::pair<int, std::vector<int>>> transformationDictionary; 
 };
 
+#endif
 
-class AccessDictionary{
-public:
-	static BoardDictionary& getBoardDictionary() {
-		static BoardDictionary staticStuff; // constructor runs once, when someone first needs it 
-		return staticStuff; 
-	} 
-};

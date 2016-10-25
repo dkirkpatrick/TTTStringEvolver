@@ -1,3 +1,9 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick 
+*	Copyright 2016, all rights reserved
+*/
+
+
 #ifndef StructHeader_H_
 #define StructHeader_H_
 
@@ -5,21 +11,20 @@
 #include <cmath>
 #include <memory>
 
-struct Portfolio{ 
-	std::vector<double> ValueArray;
+struct Strategy{ 
+	std::vector<int> PlayArray;
 	int generationID; 
 	int parentID; 
 	int generation; 
 	double fitness;
-	void normalize(); 
-	friend bool operator<(const Portfolio& l, const Portfolio& r); 
+	friend bool operator<(const Strategy& l, const Strategy& r); 
 	std::string toString(); 
 	std::string getIDString(); 
 }; 
 
 struct LineOfDescentNode{
 	std::shared_ptr<LineOfDescentNode> parent;
-	Portfolio m_portfolio; 
+	Strategy m_Strategy; 
 };
 
 #endif // !StructHeader_H_

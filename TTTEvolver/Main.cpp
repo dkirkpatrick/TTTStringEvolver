@@ -1,3 +1,8 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright 2016, all rights reserved
+*/
+
 // File: Main.cpp
 // Author: Douglas Kirkpatrick
 // Description: Driver for TTT String Evolver Project 
@@ -17,14 +22,14 @@
 
 //Config file (infile) should have the following variables in order, each on a separate line: 
 //	size of population(integer)
-//	size of portfolios(integer)
-//	distribution of portfolios in the population(string, specific value)
+//	size of Strategys(integer)
+//	distribution of Strategys in the population(string, specific value)
 //	number of generations(integer)
 //	mutation method(string, specific value)
 //	rate of mutations(double, 0 - 1)
 //	selection method(string, specific value)
 //	percent selected for reproduction(double, 0 - 1)
-//	number of times the portfolio is evaluated(integer)
+//	number of times the Strategy is evaluated(integer)
 
 int main(int argc, char* argv[]){
 /*	std::cout << argv[0] << std::endl;
@@ -42,8 +47,8 @@ int main(int argc, char* argv[]){
 	}
 	else{
 		//	Default values for testing
-		infilePath = "E:\\PortfolioEvolver\\TestIn.txt";
-		outfilePath = "E:\\PortfolioEvolver\\TestOut";
+		infilePath = "E:\\StrategyEvolver\\TestIn.txt";
+		outfilePath = "E:\\StrategyEvolver\\TestOut";
 	}
 
 	//Opens config file 
@@ -51,10 +56,10 @@ int main(int argc, char* argv[]){
 
 	//Variables for the simulation. See ConfigLayout.txt for explanation
 	int sizePopulation = 100; 
-	int sizePortfolio = 2;
-	std::string distributionPortfolio = "uniform";
+	int sizeStrategy = 2;
+	std::string distributionStrategy = "uniform";
 	int numGenerations = 500; 
-	std::string methodMutation = "randomAdd";
+	std::string methodMutation = "Point";
 	double rateMutation = 0.01; 
 	std::string methodSelection = "elite"; 
 	double rateSelection = 0.30; 
@@ -63,13 +68,13 @@ int main(int argc, char* argv[]){
 
 	if (infileStream.is_open()){
 		//Reads all variables from the config file and sets them correctly
-		infileStream >> sizePopulation >> sizePortfolio >> distributionPortfolio; 
+		infileStream >> sizePopulation >> sizeStrategy >> distributionStrategy; 
 		infileStream >> numGenerations >> methodMutation >> rateMutation; 
 		infileStream >> methodSelection >> rateSelection >> numEvals; 
 		infileStream.close(); 
 	}
 
-	PopulationController m_controller(sizePopulation, sizePortfolio, distributionPortfolio, numGenerations,
+	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations,
 		methodMutation, rateMutation, methodSelection, rateSelection, numEvals); 
 	m_controller.run(); 
 	std::cout << "done run" << std::endl; 
@@ -79,6 +84,21 @@ int main(int argc, char* argv[]){
 	*/
 
 	auto p = AccessDictionary::getBoardDictionary().dict(); 
+	int count; 
+	int max = 0; 
+	for (auto member : p) {
+		count++; 
+		if (member.second.first > max) {
+			max = member.second.first; 
+		}
+	}
+
+	std::cout << "Count: " << count << "\nMax: " << max;
+
+
+	int temp;
+	std::cout << "Done" << std::endl;
+	std::cin >> temp; 
 
 	return 0;
 }

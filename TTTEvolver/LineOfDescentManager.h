@@ -6,8 +6,8 @@
 
 class LineOfDescent {
 public: 
-	void setup(std::vector<Portfolio> firstGen); 
-	void addGen(std::vector<Portfolio> newGen); 
+	void setup(std::vector<Strategy> firstGen); 
+	void addGen(std::vector<Strategy> newGen); 
 	std::string printLineOfDescent(); 
 private: 
 	std::vector<std::shared_ptr<LineOfDescentNode>> m_currentGen; 

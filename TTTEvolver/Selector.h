@@ -9,7 +9,7 @@ class Selector{
 public: 
 	Selector(double rateSel, int numEval); 
 
-	virtual std::vector<Portfolio> createNextGen(std::vector<Portfolio> oldGeneration) = 0; 
+	virtual std::vector<Strategy> createNextGen(std::vector<Strategy> oldGeneration) = 0; 
 
 protected: 
 	double m_rateSelection;

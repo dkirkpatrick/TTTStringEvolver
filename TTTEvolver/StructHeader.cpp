@@ -1,23 +1,17 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright 2016, all rights reserved
+*/
+
 #include "StructHeader.h" 
 #include <string>
 
-bool operator<(const Portfolio& l, const Portfolio& r)
+bool operator<(const Strategy& l, const Strategy& r)
 {
 	return l.fitness < r.fitness;
 }
 
-void Portfolio::normalize(){
-	double dist = 0.0; 
-	for (double d : ValueArray){
-		dist += pow(d,2); 
-	}
-	double length = sqrt(dist); 
-	for (int i = 0; i < ValueArray.size(); i++){
-		ValueArray[i] = (ValueArray[i] * sqrt(ValueArray.size()) / length); 
-	}
-}
-
-std::string Portfolio::getIDString(){
+std::string Strategy::getIDString(){
 	std::string outputString = "";
 
 	outputString += std::to_string(generation);
@@ -27,19 +21,19 @@ std::string Portfolio::getIDString(){
 	return outputString;
 }
 
-std::string Portfolio::toString(){
+std::string Strategy::toString(){
 	std::string outputString = getIDString(); 
 
 	outputString += "-"; 
 	outputString += std::to_string(parentID); 
 
 	outputString += " [ ";
-	for (int i = 0; i < ValueArray.size() - 1; i++){
-		outputString += std::to_string(ValueArray.at(i));
+	for (size_t i = 0; i < PlayArray.size() - 1; i++){
+		outputString += std::to_string(PlayArray.at(i));
 		outputString += ", "; 
 	}
 
-	outputString += std::to_string(ValueArray.at(ValueArray.size() - 1));
+	outputString += std::to_string(PlayArray.at(PlayArray.size() - 1));
 	outputString += " ]\n";
 
 	return outputString; 

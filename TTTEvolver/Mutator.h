@@ -8,9 +8,9 @@ class Mutator{
 public:
 	Mutator(double mutaRate); 
 
-	std::vector<Portfolio> mutate_all(std::vector<Portfolio> mGeneration); 
+	std::vector<Strategy> mutate_all(std::vector<Strategy> mGeneration); 
 
-	virtual Portfolio mutate(Portfolio temp) = 0; 
+	virtual Strategy mutate(Strategy temp) = 0; 
 
 protected: 
 	double m_mutationRate; 

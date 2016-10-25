@@ -7,7 +7,7 @@ class EliteSelector : public Selector{
 public:
 	EliteSelector(double rateSel, int numEval);
 	
-	std::vector<Portfolio> createNextGen(std::vector<Portfolio> oldGeneration); 
+	std::vector<Strategy> createNextGen(std::vector<Strategy> oldGeneration); 
 };
 
 

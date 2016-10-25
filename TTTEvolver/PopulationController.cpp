@@ -1,5 +1,10 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright 2016, all rights reserved
+*/
+
 #include "PopulationController.h"
-#include "RandomAddMutator.h"
+#include "PointMutator.h"
 #include "RandomSubtractMutator.h"
 #include "ReallocationMutator.h"
 #include "EliteSelection.h"
@@ -7,8 +12,8 @@
 #include <fstream>
 
 PopulationController::PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, std::string metMuta,
-	double rateMuta, std::string metSel, double rateSel, int numEval):m_sizePopulation(sizePop), m_sizePortfolio(sizePort), 
-	m_distributionPortfolio(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta), 
+	double rateMuta, std::string metSel, double rateSel, int numEval):m_sizePopulation(sizePop), m_sizeStrategy(sizePort), 
+	m_distributionStrategy(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta), 
 	m_methodSelection(metSel), m_rateSelection(rateSel), m_numEvals(numEval)
 {
 	setMutator(metMuta); 
@@ -19,7 +24,7 @@ PopulationController::PopulationController(int sizePop, int sizePort, std::strin
 
 void PopulationController::run(){
 	for (int i = 0; i < m_numGenerations; i++){
-		std::vector<Portfolio> temp = m_Selector->createNextGen(m_population); 
+		std::vector<Strategy> temp = m_Selector->createNextGen(m_population); 
 		temp = m_Mutator->mutate_all(temp); 
 		m_LineOfDescent.addGen(temp); 
 		m_population = temp; 
@@ -55,9 +60,9 @@ void PopulationController::outputData(std::string outputFilePath){
 }
 
 void PopulationController::setMutator(std::string metMuta){
-	if (metMuta == "randomAdd"){
+	if (metMuta == "Point"){
 		m_methodMutation = metMuta; 
-		m_Mutator = new RandomAddMutator(m_rateMutation, m_sizePortfolio); 
+		m_Mutator = new PointMutator(m_rateMutation, m_sizeStrategy); 
 	}
 }
 
@@ -69,18 +74,18 @@ void PopulationController::setSelector(std::string metSel){
 }
 
 void PopulationController::setupPopulation(){ 
-	if(m_distributionPortfolio == "uniform"){
+	if(m_distributionStrategy == "uniform"){
 		int genIDctr = 1; 
 		while(m_population.size() < m_sizePopulation){			
-			Portfolio p; 
+			Strategy p; 
 			p.fitness = 0.0; 
 			p.generation = 0; 
 			p.generationID = genIDctr; 
 			genIDctr++; 
 			p.parentID = -1; 
 			
-			for(size_t i = 0; i < m_sizePortfolio; i++){
-				p.ValueArray.push_back(1.0); 
+			for(size_t i = 0; i < m_sizeStrategy; i++){
+				p.PlayArray.push_back(1); 
 			}
 
 			m_population.push_back(p); 
@@ -89,12 +94,12 @@ void PopulationController::setupPopulation(){
 }
 
 std::string PopulationController::getFilePrefix(){
-	std::string outString = "Portfolios-"; 
+	std::string outString = "Strategys-"; 
 	outString += std::to_string(m_sizePopulation); 
 	outString += "-"; 
-	outString += std::to_string(m_sizePortfolio);
+	outString += std::to_string(m_sizeStrategy);
 	outString += "-";
-	outString += m_distributionPortfolio; 
+	outString += m_distributionStrategy; 
 	outString += "-";
 	outString += std::to_string(m_numGenerations);
 	outString += "-";
@@ -113,7 +118,7 @@ std::string PopulationController::getFilePrefix(){
 
 std::string PopulationController::populationToString(){
 	std::string outString = ""; 
-	for (std::vector<Portfolio>::iterator it = m_population.begin(); it != m_population.end(); it++)
+	for (std::vector<Strategy>::iterator it = m_population.begin(); it != m_population.end(); it++)
 	{
 		outString += it->toString();
 	}

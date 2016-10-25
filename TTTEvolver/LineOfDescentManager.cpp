@@ -4,23 +4,23 @@
 #include <algorithm>
 #include <iostream>
 
-void LineOfDescent::setup(std::vector<Portfolio> firstGen){
-	for (Portfolio p : firstGen){
+void LineOfDescent::setup(std::vector<Strategy> firstGen){
+	for (Strategy p : firstGen){
 		std::shared_ptr<LineOfDescentNode> tempptr (new LineOfDescentNode);
-		tempptr->m_portfolio = p; 
+		tempptr->m_Strategy = p; 
 		tempptr->parent = std::shared_ptr<LineOfDescentNode>(nullptr); 
 		m_currentGen.push_back(tempptr); 
 	}
 }
 
-void LineOfDescent::addGen(std::vector<Portfolio> newGen){
+void LineOfDescent::addGen(std::vector<Strategy> newGen){
 	std::vector <std::shared_ptr<LineOfDescentNode>> newGenPtrs;
-	for (Portfolio p : newGen){
+	for (Strategy p : newGen){
 		std::shared_ptr<LineOfDescentNode> tempptr (new LineOfDescentNode);
-		tempptr->m_portfolio = p;
+		tempptr->m_Strategy = p;
 		
 		for (std::shared_ptr<LineOfDescentNode> LODptr : m_currentGen){
-			if (LODptr->m_portfolio.generationID = p.parentID){
+			if (LODptr->m_Strategy.generationID = p.parentID){
 				tempptr->parent = LODptr; 
 			}
 		}
@@ -32,8 +32,8 @@ void LineOfDescent::addGen(std::vector<Portfolio> newGen){
 }
 
 std::string LineOfDescent::printLineOfDescent(){
-	std::vector<Portfolio> outputVector; 
-	std::set<std::string> portfoliosSeen;
+	std::vector<Strategy> outputVector; 
+	std::set<std::string> StrategysSeen;
 	std::queue<std::shared_ptr<LineOfDescentNode>> processingQueue; 
 	std::string outputString = ""; 
 
@@ -45,13 +45,13 @@ std::string LineOfDescent::printLineOfDescent(){
 
 	while (!processingQueue.empty()){
 		std::shared_ptr<LineOfDescentNode> temp = processingQueue.front(); 
-		std::string tempID = temp->m_portfolio.getIDString(); 
-		if (portfoliosSeen.count(tempID) == 0){
-			outputVector.push_back(temp->m_portfolio); 
+		std::string tempID = temp->m_Strategy.getIDString(); 
+		if (StrategysSeen.count(tempID) == 0){
+			outputVector.push_back(temp->m_Strategy); 
 			if (temp->parent.use_count() > 0){
 				processingQueue.push(temp->parent); 
 			}
-			portfoliosSeen.insert(tempID); 
+			StrategysSeen.insert(tempID); 
 		}
 		processingQueue.pop(); 
 	}
@@ -60,7 +60,7 @@ std::string LineOfDescent::printLineOfDescent(){
 
 	std::reverse(outputVector.begin(), outputVector.end()); 
 
-	for (std::vector<Portfolio>::iterator it = outputVector.begin(); it != outputVector.end(); it++)
+	for (std::vector<Strategy>::iterator it = outputVector.begin(); it != outputVector.end(); it++)
 	{
 		outputString += it->toString();
 	}

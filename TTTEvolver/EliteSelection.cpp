@@ -2,13 +2,13 @@
 
 EliteSelector::EliteSelector(double rateSel, int numEval) : Selector(rateSel, numEval){}
 
-std::vector<Portfolio> EliteSelector::createNextGen(std::vector<Portfolio> oldGeneration){
-	for(Portfolio p: oldGeneration){
+std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGeneration){
+	for(Strategy p: oldGeneration){
 		p.fitness = 0.0; 
-		int portfolioSize = p.ValueArray.size(); 
+		int StrategySize = p.PlayArray.size(); 
 		for(int i = 0; i < m_numEval; i++){
-			int evalTemp = rand() % portfolioSize;
-			p.fitness+=p.ValueArray.at(evalTemp); 
+			int evalTemp = rand() % StrategySize;
+			p.fitness+=p.PlayArray.at(evalTemp); 
 		}
 	}
 
@@ -17,20 +17,20 @@ std::vector<Portfolio> EliteSelector::createNextGen(std::vector<Portfolio> oldGe
 
 	int populationProportion = (int) std::ceil(m_rateSelection*oldGeneration.size()); 
 
-	std::vector<Portfolio> newGeneration; 
+	std::vector<Strategy> newGeneration; 
 
 	int genIDcoutner = 1; 
 
 	while(newGeneration.size() < oldGeneration.size()){
 		int selectionVar  = rand() % populationProportion; 
-		Portfolio parent = oldGeneration.at(selectionVar); 
+		Strategy parent = oldGeneration.at(selectionVar); 
 
-		Portfolio child; 
+		Strategy child; 
 		child.fitness = 0.0; 
 		child.generation = parent.generation + 1; 
-		for (std::vector<double>::iterator it = parent.ValueArray.begin(); it != parent.ValueArray.end(); it++)
+		for (std::vector<int>::iterator it = parent.PlayArray.begin(); it != parent.PlayArray.end(); it++)
 		{
-			child.ValueArray.push_back(*it);
+			child.PlayArray.push_back(*it);
 		}
 		child.parentID = parent.generationID; 
 		child.generationID = genIDcoutner; 

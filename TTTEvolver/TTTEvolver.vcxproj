@@ -147,10 +147,8 @@
     <ClCompile Include="LineOfDescentManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mutator.cpp" />
+    <ClCompile Include="PointMutator.cpp" />
     <ClCompile Include="PopulationController.cpp" />
-    <ClCompile Include="RandomAddMutator.cpp" />
-    <ClCompile Include="RandomSubtractMutator.cpp" />
-    <ClCompile Include="ReallocationMutator.cpp" />
     <ClCompile Include="RouletteSelection.cpp" />
     <ClCompile Include="Selector.cpp" />
     <ClCompile Include="StructHeader.cpp" />
@@ -162,11 +160,9 @@
     <ClInclude Include="EliteSelection.h" />
     <ClInclude Include="LineOfDescentManager.h" />
     <ClInclude Include="Mutator.h" />
+    <ClInclude Include="PointMutator.h" />
     <ClInclude Include="PopulationController.h" />
     <ClInclude Include="Random.h" />
-    <ClInclude Include="RandomAddMutator.h" />
-    <ClInclude Include="RandomSubtractMutator.h" />
-    <ClInclude Include="ReallocationMutator.h" />
     <ClInclude Include="RouletteSelection.h" />
     <ClInclude Include="Selector.h" />
     <ClInclude Include="StructHeader.h" />

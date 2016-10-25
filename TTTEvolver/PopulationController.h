@@ -20,8 +20,8 @@ public:
 private: 
 	void setupPopulation(); 
 	size_t m_sizePopulation;
-	size_t m_sizePortfolio;
-	std::string m_distributionPortfolio;
+	size_t m_sizeStrategy;
+	std::string m_distributionStrategy;
 	int m_numGenerations;
 	std::string m_methodMutation;
 	double m_rateMutation;
@@ -29,7 +29,7 @@ private:
 	double m_rateSelection;
 	int m_numEvals;
 
-	std::vector<Portfolio> m_population; 
+	std::vector<Strategy> m_population; 
 	
 	Mutator* m_Mutator; 
 	Selector* m_Selector; 

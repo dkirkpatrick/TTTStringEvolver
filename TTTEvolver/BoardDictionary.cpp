@@ -5,6 +5,27 @@
 
 #include "BoardDictionary.h"
 
+void BoardDictionary::initMasks() {
+	myMasks = std::vector<std::vector<int>>();
+	std::vector<int> mask0 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+	std::vector<int> mask1 = { 0, 3, 6, 1, 4, 7, 2, 5, 8 };
+	std::vector<int> mask2 = { 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+	std::vector<int> mask3 = { 2, 1, 0, 5, 4, 3, 8, 7, 6 };
+	std::vector<int> mask4 = { 8, 5, 2, 7, 4, 1, 6, 3, 0 };
+	std::vector<int> mask5 = { 6, 7, 8, 3, 4, 5, 0, 1, 2 };
+	std::vector<int> mask6 = { 6, 3, 0, 7, 4, 1, 8, 5, 2 };
+	std::vector<int> mask7 = { 2, 5, 8, 1, 4, 7, 0, 3, 6 };
+	myMasks.push_back(mask0); 
+	myMasks.push_back(mask1);
+	myMasks.push_back(mask2);
+	myMasks.push_back(mask3);
+	myMasks.push_back(mask4);
+	myMasks.push_back(mask5);
+	myMasks.push_back(mask6);
+	myMasks.push_back(mask7);
+}
+
+
 void BoardDictionary::initDictionary(){
 	transformationDictionary = std::map<int, std::pair<int, std::vector<int>>>();
 	std::vector<int> myTempVector = std::vector<int>();

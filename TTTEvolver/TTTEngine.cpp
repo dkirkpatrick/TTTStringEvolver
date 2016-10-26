@@ -1,6 +1,10 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright (c) 2016, all rights reserved
+*/
+
 //
 //  TTTEngine.cpp
-//  BasicMarkovBrainTemplate
 //
 //  Created by Douglas Kirkpatrick on 3/30/16.
 //  Copyright (c) 2016 Douglas Kirkpatrick. All rights reserved.

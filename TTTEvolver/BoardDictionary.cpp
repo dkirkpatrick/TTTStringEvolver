@@ -1,6 +1,6 @@
 /*
 *	Part of the TTTStringEvolver by Douglas Kirkpatrick
-*	Copyright 2016, all rights reserved
+*	Copyright (c) 2016, all rights reserved
 */
 
 #include "BoardDictionary.h"

@@ -1,3 +1,8 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright (c) 2016, all rights reserved
+*/
+
 #ifndef POPULATIONCONTROLLER_H_   
 #define POPULATIONCONTROLLER_H_
 

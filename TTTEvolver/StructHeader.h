@@ -1,6 +1,6 @@
 /*
-*	Part of the TTTStringEvolver by Douglas Kirkpatrick 
-*	Copyright 2016, all rights reserved
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright (c) 2016, all rights reserved
 */
 
 #include <vector>

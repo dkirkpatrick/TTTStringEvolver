@@ -1,3 +1,8 @@
+/*
+*	Part of the TTTStringEvolver by Douglas Kirkpatrick
+*	Copyright (c) 2016, all rights reserved
+*/
+
 #include "PointMutator.h"
 #include "Random.h"
 PointMutator::PointMutator(double mutaRate, double maxSize) : Mutator(mutaRate), m_maxAdd(maxSize) {};

@@ -30,16 +30,10 @@
     <ClCompile Include="PopulationController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RouletteSelection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Selector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StructHeader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TournamentSelection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TTTEngine.cpp">
@@ -68,16 +62,10 @@
     <ClInclude Include="Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RouletteSelection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Selector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StructHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TournamentSelection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TTTEngine.h">

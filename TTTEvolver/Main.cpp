@@ -32,7 +32,7 @@
 //	number of times the Strategy is evaluated(integer)
 
 int main(int argc, char* argv[]){
-/*	std::cout << argv[0] << std::endl;
+	std::cout << argv[0] << std::endl;
 
 	//String path to the config file
 	std::string infilePath;
@@ -81,9 +81,9 @@ int main(int argc, char* argv[]){
 	m_controller.outputData(outfilePath);
 
 	std::cout << "Done" << std::endl; 
-	*/
+	
 
-
+	/*
 	BoardDictionary accessPoint; 
 	int count = 0; 
 	int max = 0;
@@ -105,6 +105,6 @@ int main(int argc, char* argv[]){
 	int temp;
 	std::cout << "Done" << std::endl;
 	std::cin >> temp; 
-
+	*/
 	return 0;
 }

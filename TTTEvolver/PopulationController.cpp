@@ -89,6 +89,7 @@ void PopulationController::setupPopulation(){
 			m_population.push_back(p); 
 		}
 	}
+
 }
 
 std::string PopulationController::getFilePrefix(){

@@ -82,17 +82,24 @@ int main(int argc, char* argv[]){
 
 	std::cout << "Done" << std::endl; 
 	*/
-	BoardDictionary accessPoint = BoardDictionary();
+
+
+	BoardDictionary accessPoint; 
 	int count = 0; 
-	int max = 0; 
+	int max = 0;
+	int max2 = 0; 
 	for (auto member : accessPoint.dict()) {
 		count++; 
-		if (member.second.first > max) {
-			max = member.second.first; 
+		if (member.second.at(2) > max) {
+			max = member.second.at(2);
 		}
+		if (member.second.at(0) > max2) {
+			max2 = member.second.at(0);
+		}
+
 	}
 
-	std::cout << "Count: " << count << "\nMax: " << max;
+	std::cout << "Count: " << count << "\nMax1: " << max << "\nMax2: " << max2 << std::endl;
 
 
 	int temp;

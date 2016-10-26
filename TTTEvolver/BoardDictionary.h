@@ -14,16 +14,17 @@ public:
 
 	std::vector<int> getMask(int i) {
 		return myMasks[i]; 
-	}
+	};
 	
-	std::map<int, std::pair<int, std::vector<int>>> dict() {
+	std::map<int, std::vector<int>> dict() {
 		return transformationDictionary;
-	}
+	};
+
 private: 
 	void initDictionary(); 
 	void initMasks(); 
 	std::vector<std::vector<int>> myMasks;
-	std::map<int, std::pair<int, std::vector<int>>> transformationDictionary; 
+	std::map<int, std::vector<int>> transformationDictionary; 
 };
 
 #endif

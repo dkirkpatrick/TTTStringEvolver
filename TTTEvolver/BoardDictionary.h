@@ -21,7 +21,7 @@ public:
 		return myMasks[i]; 
 	};
 	
-	std::map<int, std::vector<int>> dict() {
+	const std::map<int, std::vector<int>>& dict() {
 		return transformationDictionary;
 	};
 

@@ -10,17 +10,22 @@
 #include "Selector.h"
 #include "LineOfDescentManager.h"
 #include <string>
+#include <map>
 
 class PopulationController{
 public:
 	PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, std::string metMuta,
-		double rateMuta, std::string metSel, double rateSel, int numEval);
+		double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed);
 	void run(); 
 	void outputData(std::string outputFilePath); 
 	void setMutator(std::string metMuta); 
 	void setSelector(std::string metSel);
 	std::string getFilePrefix(); 
 	std::string populationToString(); 
+	const std::vector<Strategy> getPopulation() {
+		return m_population;
+	};
+	std::map<std::string, std::vector<int>> finalTesting(); 
 
 private: 
 	void setupPopulation(); 
@@ -33,6 +38,9 @@ private:
 	std::string m_methodSelection;
 	double m_rateSelection;
 	int m_numEvals;
+	double m_winVal; 
+	double m_drawVal; 
+	int m_randSeed; 
 
 	std::vector<Strategy> m_population; 
 	

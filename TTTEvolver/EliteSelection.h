@@ -9,14 +9,17 @@
 #include "Selector.h"
 #include "TTTEngine.h"
 #include "BoardDictionary.h"
+#include "TTTPlayers.h"
+
 class EliteSelector : public Selector{
 public:
 	EliteSelector(double rateSel, int numEval);
 	EliteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal);
 	std::vector<Strategy> createNextGen(std::vector<Strategy> oldGeneration); 
 
-	double play(Strategy s1, Strategy s2); 
-	int getPlay(Strategy s, TTTGame mGame, int whichPlayer);
+	int play(Strategy& s1, Strategy& s2);
+	int play(Strategy& s1, TTTPlayer * myPlayer);
+	int getPlay(Strategy& s, TTTGame& mGame, int whichPlayer);
 
 private:
 	BoardDictionary myRef; 

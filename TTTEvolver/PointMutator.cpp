@@ -9,14 +9,15 @@ PointMutator::PointMutator(double mutaRate, double maxSize) : Mutator(mutaRate),
 
 Strategy PointMutator::mutate(Strategy p)
 {
-	//Generates a location to add the random value to 
-	int addLoc = Random::getIndex(p.PlayArray.size());
-
-	//Copies the Strategy to be mutated 
 	Strategy ret(p);
 
-	//Add the random value at the random location 
-	ret.PlayArray[addLoc] = Random::getIndex(10);
-
+	int addLoc = Random::getIndex(p.PlayArray.size());
+	for (int i = 0; i < p.PlayArray.size(); i++) {
+		if (Random::P(m_mutationRate)) {
+			ret.PlayArray[i] = Random::getInt(0, 8);
+		} else {
+			ret.PlayArray[i] = p.PlayArray[i];
+		}
+	}
 	return ret;
 };

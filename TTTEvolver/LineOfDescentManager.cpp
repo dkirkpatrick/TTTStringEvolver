@@ -46,22 +46,19 @@ std::string LineOfDescent::printLineOfDescent(){
 		processingQueue.push(LODptr); 
 	}
 
-	std::cout << "After for" << std::endl; 
-
 	while (!processingQueue.empty()){
 		std::shared_ptr<LineOfDescentNode> temp = processingQueue.front(); 
+		if (!temp) {
+			break;
+		}
 		std::string tempID = temp->m_Strategy.getIDString(); 
 		if (StrategysSeen.count(tempID) == 0){
 			outputVector.push_back(temp->m_Strategy); 
-			if (temp->parent.use_count() > 0){
-				processingQueue.push(temp->parent); 
-			}
+			processingQueue.push(temp->parent); 
 			StrategysSeen.insert(tempID); 
 		}
 		processingQueue.pop(); 
 	}
-
-	std::cout << "After while" << std::endl;
 
 	std::reverse(outputVector.begin(), outputVector.end()); 
 

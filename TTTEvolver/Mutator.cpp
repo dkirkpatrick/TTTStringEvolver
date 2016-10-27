@@ -4,18 +4,13 @@
 */
 
 #include "Mutator.h"
-
+#include "Random.h"
 Mutator::Mutator(double mutaRate) : m_mutationRate(mutaRate){}; 
 
 std::vector<Strategy> Mutator::mutate_all(std::vector<Strategy> mGeneration){
 	std::vector<Strategy> temp;
 	for (Strategy mPort : mGeneration){
-		if (rand() / RAND_MAX < m_mutationRate){
-			temp.push_back(mutate(mPort));
-		}
-		else{
-			temp.push_back(mPort); 
-		}
+		temp.push_back(mutate(mPort));
 	}
 	return temp;
 }

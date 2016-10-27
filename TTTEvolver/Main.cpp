@@ -16,95 +16,63 @@
 #include <fstream>
 
 #include "PopulationController.h"
-#include "BoardDictionary.h"
+#include "Random.h"
 
-//Takes 2 strings as parameters, input configuration file and output file directory
-
-//Config file (infile) should have the following variables in order, each on a separate line: 
-//	size of population(integer)
-//	size of Strategys(integer)
-//	distribution of Strategys in the population(string, specific value)
-//	number of generations(integer)
-//	mutation method(string, specific value)
-//	rate of mutations(double, 0 - 1)
-//	selection method(string, specific value)
-//	percent selected for reproduction(double, 0 - 1)
-//	number of times the Strategy is evaluated(integer)
+// Takes seed, output file path, win reward, and draw reward 
+// as input in that order with types:
+// int, string, double, double 
 
 int main(int argc, char* argv[]){
-	std::cout << argv[0] << std::endl;
 
-	//String path to the config file
-	std::string infilePath;
+	std::cout << argv[0] << std::endl;
 
 	//String path to the output file directory
 	std::string outfilePath;
 
+	//Random seed for experiment
+	int randomSeed; 
+
+	double winval; 
+	double drawval; 
+	int numGenerations;
+	int sizePopulation;
+	
 	//Reads in arguments if present
 	if (argc > 1){
-		infilePath = argv[1];
+		randomSeed = atoi(argv[1]); 
 		outfilePath = argv[2];
+		winval = atof(argv[3]); 
+		drawval = atof(argv[4]); 
+		numGenerations = atoi(argv[5]); 
+		sizePopulation = atoi(argv[6]); 
 	}
 	else{
-		//	Default values for testing
-		infilePath = "E:\\StrategyEvolver\\TestIn.txt";
-		outfilePath = "E:\\StrategyEvolver\\TestOut";
+		randomSeed = 100; 
+		outfilePath = "./";
+		winval = 1.0; 
+		drawval = 0.5; 
+		numGenerations = 10;
+		sizePopulation = 200;
 	}
 
-	//Opens config file 
-	std::ifstream infileStream(infilePath);
-
-	//Variables for the simulation. See ConfigLayout.txt for explanation
-	int sizePopulation = 100; 
-	int sizeStrategy = 2;
-	std::string distributionStrategy = "uniform";
-	int numGenerations = 500; 
+	Random::getCommonGenerator().seed(randomSeed); 
+	
+	int sizeStrategy = 3164;
+	std::string distributionStrategy = "random";
 	std::string methodMutation = "Point";
-	double rateMutation = 0.01; 
+	double rateMutation = 0.001; 
 	std::string methodSelection = "elite"; 
-	double rateSelection = 0.30; 
+	double rateSelection = 0.40; 
 	int numEvals = 1; 
 
-
-	if (infileStream.is_open()){
-		//Reads all variables from the config file and sets them correctly
-		infileStream >> sizePopulation >> sizeStrategy >> distributionStrategy; 
-		infileStream >> numGenerations >> methodMutation >> rateMutation; 
-		infileStream >> methodSelection >> rateSelection >> numEvals; 
-		infileStream.close(); 
-	}
-
 	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations,
-		methodMutation, rateMutation, methodSelection, rateSelection, numEvals); 
+		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed); 
 	m_controller.run(); 
-	std::cout << "done run" << std::endl; 
+	std::cout << "Done run" << std::endl; 
 	m_controller.outputData(outfilePath);
 
 	std::cout << "Done" << std::endl; 
-	
+		
 
-	/*
-	BoardDictionary accessPoint; 
-	int count = 0; 
-	int max = 0;
-	int max2 = 0; 
-	for (auto member : accessPoint.dict()) {
-		count++; 
-		if (member.second.at(2) > max) {
-			max = member.second.at(2);
-		}
-		if (member.second.at(0) > max2) {
-			max2 = member.second.at(0);
-		}
-
-	}
-
-	std::cout << "Count: " << count << "\nMax1: " << max << "\nMax2: " << max2 << std::endl;
-
-
-	int temp;
-	std::cout << "Done" << std::endl;
-	std::cin >> temp; 
-	*/
 	return 0;
 }

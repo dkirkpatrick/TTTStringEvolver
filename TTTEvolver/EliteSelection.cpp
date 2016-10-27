@@ -5,6 +5,7 @@
 
 #include "EliteSelection.h"
 #include "Random.h"
+#include <iostream>
 
 EliteSelector::EliteSelector(double rateSel, int numEval) : Selector(rateSel, numEval){
 	myRef = BoardDictionary();
@@ -42,7 +43,7 @@ std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGene
 	int genIDcoutner = 1; 
 
 	while(newGeneration.size() < oldGeneration.size()){
-		int selectionVar  = rand() % populationProportion; 
+		int selectionVar  = Random::getIndex(populationProportion);
 		Strategy parent = oldGeneration.at(selectionVar); 
 
 		Strategy child; 
@@ -62,7 +63,44 @@ std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGene
 	return newGeneration; 
 }
 
-double EliteSelector::play(Strategy s1, Strategy s2) {
+
+int EliteSelector::play(Strategy& s1, TTTPlayer* myPlayer) {
+	int playCount = 0;
+	TTTGame myGame = TTTGame(3);
+
+	// Assign player to brain, opponent
+	int s1Plays = Random::getInt(1, 2);
+	int TTTPlayerPlays = (s1Plays == 2 ? 1 : 2);
+	bool whoPlays = (TTTPlayerPlays == 1);
+	int i = 0;
+	// Handles the result until a conclusion is reached 
+	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {
+		i++;
+		if (whoPlays) {
+			std::vector<int> otherPlay = myPlayer->getPlay(myGame, TTTPlayerPlays);
+			myGame.play(otherPlay.at(0), otherPlay.at(1), TTTPlayerPlays);
+			whoPlays = false;
+		}
+		else {
+			int myPlay = getPlay(s1, myGame, s1Plays);
+			myGame.play(myPlay, s1Plays);
+			whoPlays = true;
+		}
+	}
+
+	// Outputs based on game results 
+	if (myGame.gameDraw()) {
+		return 0;
+	}
+	else if (myGame.gameWon() == s1Plays) {
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
+int EliteSelector::play(Strategy& s1, Strategy& s2) {
 	int playCount = 0;
 	TTTGame myGame = TTTGame(3);
 	
@@ -70,9 +108,10 @@ double EliteSelector::play(Strategy s1, Strategy s2) {
 	int s1Plays = Random::getInt(1, 2);
 	int s2Plays = (s1Plays == 2 ? 1 : 2);
 	bool whoPlays = (s2Plays == 1);
-
+	int i = 0; 
 	// Handles the result until a conclusion is reached 
-	while (myGame.gameWon() == 0 && !myGame.gameDraw()) {
+	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {
+		i++;
 		if (whoPlays) {
 			int otherPlay = getPlay(s2, myGame, s2Plays);
 			myGame.play(otherPlay, s2Plays);
@@ -97,7 +136,7 @@ double EliteSelector::play(Strategy s1, Strategy s2) {
 	}
 }
 
-int EliteSelector::getPlay(Strategy s, TTTGame mGame, int whichPlayer)
+int EliteSelector::getPlay(Strategy& s, TTTGame& mGame, int whichPlayer)
 {
 	std::vector<int> lookup = myRef.dict().at(mGame.base3Board()); 
 	std::vector<int> permute = mGame.getInversePermutation(myRef.getMask(lookup.at(1))); 

@@ -35,15 +35,15 @@ public:
 	int base3Board();
 	int base3OtherBoard(std::vector<std::vector<int>> board);
 	int base3OtherBoardFrom1D(std::vector<int> board);
-	std::vector<std::vector<int>> boardFromBase3(int base3Board);
+	std::vector<std::vector<int>>& boardFromBase3(int base3Board);
 	std::string getLastPlayString();
 
-	std::vector<int> get1DBoard(std::vector<std::vector<int>> inBoard);
-	std::vector<std::vector<int>> get2DBoard(std::vector<int> inBoard); 
-	std::vector<int> getFlipedBoard(std::vector<int> myBoard);
+	std::vector<int>& get1DBoard(std::vector<std::vector<int>> inBoard);
+	std::vector<std::vector<int>>& get2DBoard(std::vector<int> inBoard); 
+	std::vector<int>& getFlipedBoard(std::vector<int> myBoard);
 	bool boardEquality(std::vector<int> board1, std::vector<int> board2);
-	std::vector<int> getRotatedBoard(std::vector<int> myBoard);
-	std::vector<int> getPermutedBoard(std::vector<int> myBoard, std::vector<int> myScreen);
+	std::vector<int>& getRotatedBoard(std::vector<int> myBoard);
+	std::vector<int>& getPermutedBoard(std::vector<int> myBoard, std::vector<int> myScreen);
 	std::vector<int> getInversePermutation(std::vector<int> inPermutation);
 	std::pair<int, std::vector<int>> getOtherMinimumBoardAndPermutation(std::vector<int> myBoard);
 	std::pair<int, std::vector<int>> getMinimumBoardAndPermutation(); 

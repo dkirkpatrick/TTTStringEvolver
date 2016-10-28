@@ -149,6 +149,7 @@
     <ClCompile Include="Mutator.cpp" />
     <ClCompile Include="PointMutator.cpp" />
     <ClCompile Include="PopulationController.cpp" />
+    <ClCompile Include="RouletteSelection.cpp" />
     <ClCompile Include="Selector.cpp" />
     <ClCompile Include="StructHeader.cpp" />
     <ClCompile Include="TTTEngine.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="PointMutator.h" />
     <ClInclude Include="PopulationController.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="RouletteSelection.h" />
     <ClInclude Include="Selector.h" />
     <ClInclude Include="StructHeader.h" />
     <ClInclude Include="TTTEngine.h" />

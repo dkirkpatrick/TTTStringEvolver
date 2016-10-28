@@ -12,7 +12,9 @@
 
 class Selector{
 public: 
-	Selector(double rateSel, int numEval); 
+	Selector(double rateSel, int numEval);
+
+	Strategy getChild(Strategy parent, int genIDcoutner);
 
 	virtual std::vector<Strategy> createNextGen(std::vector<Strategy> oldGeneration) = 0; 
 

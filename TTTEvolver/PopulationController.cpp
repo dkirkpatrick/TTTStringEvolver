@@ -4,6 +4,7 @@
 */
 
 #include "PopulationController.h"
+#include "RouletteSelection.h"
 #include "PointMutator.h"
 #include "EliteSelection.h"
 #include <iostream>
@@ -88,16 +89,24 @@ void PopulationController::outputData(std::string outputFilePath){
 }
 
 void PopulationController::setMutator(std::string metMuta){
-	if (metMuta == "Point"){
+	if (metMuta == "point"){
 		m_methodMutation = metMuta; 
 		m_Mutator = new PointMutator(m_rateMutation, m_sizeStrategy); 
+	} else {
+		std::cout << "NO MUTATOR ASSIGNED" << std::endl;
 	}
+	
 }
 
 void PopulationController::setSelector(std::string metSel){
 	if (metSel == "elite"){
 		m_methodSelection = metSel; 
 		m_Selector = new EliteSelector(m_rateSelection, m_numEvals,m_winVal, 0.0, m_drawVal); 
+	} else if (metSel == "roulette") {
+		m_methodSelection = metSel;
+		m_Selector = new RouletteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal);
+	} else {
+		std::cout << "NO SELECTOR ASSIGNED" << std::endl;
 	}
 }
 
@@ -118,8 +127,7 @@ void PopulationController::setupPopulation(){
 
 			m_population.push_back(p); 
 		}
-	}
-	if (m_distributionStrategy == "random") {
+	} else if (m_distributionStrategy == "random") {
 		int genIDctr = 1;
 		while (m_population.size() < m_sizePopulation) {
 			Strategy p;
@@ -135,6 +143,8 @@ void PopulationController::setupPopulation(){
 
 			m_population.push_back(p);
 		}
+	} else {
+		std::cout << "NO POPULATION GENERATION ASSIGNED" << std::endl;
 	}
 
 }

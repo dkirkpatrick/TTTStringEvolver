@@ -21,6 +21,14 @@ std::string Strategy::getIDString(){
 	return outputString;
 }
 
+void Strategy::setFitness(double d) {
+	fitness = d; 
+}
+
+void Strategy::addFitness(double d) {
+	fitness += d; 
+}
+
 std::string Strategy::toString(){
 	std::string outputString = getIDString(); 
 

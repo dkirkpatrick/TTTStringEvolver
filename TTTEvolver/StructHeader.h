@@ -20,6 +20,8 @@ struct Strategy{
 	friend bool operator<(const Strategy& l, const Strategy& r); 
 	std::string toString(); 
 	std::string getIDString(); 
+	void setFitness(double d);
+	void addFitness(double d);
 }; 
 
 struct LineOfDescentNode{

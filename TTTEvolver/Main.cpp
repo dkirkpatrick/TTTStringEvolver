@@ -59,9 +59,9 @@ int main(int argc, char* argv[]){
 	
 	int sizeStrategy = 3164;
 	std::string distributionStrategy = "random";
-	std::string methodMutation = "Point";
+	std::string methodMutation = "point";
 	double rateMutation = 0.001; 
-	std::string methodSelection = "elite"; 
+	std::string methodSelection = "roulette"; 
 	double rateSelection = 0.40; 
 	int numEvals = 1; 
 

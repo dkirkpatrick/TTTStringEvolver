@@ -19,18 +19,21 @@ EliteSelector::EliteSelector(double rateSel, int numEval, double winVal, double 
 }
 
 std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGeneration){
-	for(Strategy p: oldGeneration){
-		p.fitness = 0.0; 
+	std::vector<double> fitnessArray = std::vector<double>(oldGeneration.size(), 0.0);
+	for (Strategy p : oldGeneration) {
 		for (Strategy p2 : oldGeneration) {
-			double value = play(p, p2); 
+			double value = play(p, p2);
 			if (value > 0) {
-				p.fitness += m_winVal; 
-			} else if (value < 0) {
-				p.fitness += m_lossVal;
-			} else {
-				p.fitness += m_drawVal;
+				fitnessArray[p.generationID - 1] += m_winVal;
+			}
+			else if (value < 0) {
+				fitnessArray[p.generationID - 1] += m_lossVal;
+			}
+			else {
+				fitnessArray[p.generationID - 1] += m_drawVal;
 			}
 		}
+		p.setFitness(fitnessArray[p.generationID - 1]);
 	}
 
 	std::sort(oldGeneration.begin(), oldGeneration.end()); 
@@ -45,19 +48,8 @@ std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGene
 	while(newGeneration.size() < oldGeneration.size()){
 		int selectionVar  = Random::getIndex(populationProportion);
 		Strategy parent = oldGeneration.at(selectionVar); 
-
-		Strategy child; 
-		child.fitness = 0.0; 
-		child.generation = parent.generation + 1; 
-		for (std::vector<int>::iterator it = parent.PlayArray.begin(); it != parent.PlayArray.end(); it++)
-		{
-			child.PlayArray.push_back(*it);
-		}
-		child.parentID = parent.generationID; 
-		child.generationID = genIDcoutner; 
-		genIDcoutner++; 
-
-		newGeneration.push_back(child); 
+		newGeneration.push_back(getChild(parent, genIDcoutner));
+		genIDcoutner++;
 	}
 
 	return newGeneration; 

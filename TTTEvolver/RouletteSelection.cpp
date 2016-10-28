@@ -19,47 +19,46 @@ RouletteSelector::RouletteSelector(double rateSel, int numEval, double winVal, d
 }
 
 std::vector<Strategy> RouletteSelector::createNextGen(std::vector<Strategy> oldGeneration) {
+	double maxFitness = 0.0; 
+	std::vector<double> fitnessArray = std::vector<double>(oldGeneration.size(), 0.0); 
 	for (Strategy p : oldGeneration) {
-		p.fitness = 0.0;
 		for (Strategy p2 : oldGeneration) {
 			double value = play(p, p2);
 			if (value > 0) {
-				p.fitness += m_winVal;
+				fitnessArray[p.generationID-1] += m_winVal;
 			}
 			else if (value < 0) {
-				p.fitness += m_lossVal;
+				fitnessArray[p.generationID-1] += m_lossVal;
 			}
 			else {
-				p.fitness += m_drawVal;
+				fitnessArray[p.generationID-1] += m_drawVal;
 			}
 		}
+		if (maxFitness < fitnessArray[p.generationID-1]) {
+			maxFitness = fitnessArray[p.generationID-1];
+		}
+		p.setFitness(fitnessArray[p.generationID-1]); 
 	}
 
-	std::sort(oldGeneration.begin(), oldGeneration.end());
-	std::reverse(oldGeneration.begin(), oldGeneration.end());
-
-	int populationProportion = (int)std::ceil(m_rateSelection*oldGeneration.size());
-
+	
 	std::vector<Strategy> newGeneration;
 
 	int genIDcoutner = 1;
 
 	while (newGeneration.size() < oldGeneration.size()) {
-		int selectionVar = Random::getIndex(populationProportion);
-		Strategy parent = oldGeneration.at(selectionVar);
-
-		Strategy child;
-		child.fitness = 0.0;
-		child.generation = parent.generation + 1;
-		for (std::vector<int>::iterator it = parent.PlayArray.begin(); it != parent.PlayArray.end(); it++)
-		{
-			child.PlayArray.push_back(*it);
+		int who;
+		if (maxFitness > 0.0) {  // if anyone has fitness > 0
+			do {
+				who = Random::getIndex(oldGeneration.size());  //keep choosing a random genome from population until we get one that's good enough
+			} while (pow(1.05, Random::getDouble(1)) > pow(1.05, (fitnessArray[who] / maxFitness)));
 		}
-		child.parentID = parent.generationID;
-		child.generationID = genIDcoutner;
+		else {
+			who = Random::getIndex(oldGeneration.size());  // otherwise, just pick a random genome from population
+		}
+		Strategy parent = oldGeneration.at(who);
+		newGeneration.push_back(getChild(parent, genIDcoutner));
 		genIDcoutner++;
 
-		newGeneration.push_back(child);
 	}
 
 	return newGeneration;

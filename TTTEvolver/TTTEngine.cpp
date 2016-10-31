@@ -219,7 +219,7 @@ int TTTGame::base3OtherBoardFrom1D(std::vector<int> board) {
 }
 
 // Converts a board from base 3 to a vector of vector of ints 
-std::vector<std::vector<int>>& TTTGame::boardFromBase3(int base3Board) {
+std::vector<std::vector<int>> TTTGame::boardFromBase3(int base3Board) {
 	std::vector<std::vector<int>> tempBoard = std::vector<std::vector<int>>(myBoardSize, std::vector<int>(myBoardSize, 0));
 	int tempVal = base3Board;
 	for (int i = 0; i < myBoardSize; i++) {
@@ -262,7 +262,7 @@ std::string TTTGame::getLastPlayString() {
 }
 
 
-std::vector<int>& TTTGame::get1DBoard(std::vector<std::vector<int>> inBoard) {
+std::vector<int> TTTGame::get1DBoard(std::vector<std::vector<int>> inBoard) {
 	std::vector<int> temp = std::vector<int>();
 	for (int i = 0; i < myBoardSize; i++) {
 		for (int j = 0; j < myBoardSize; j++) {
@@ -272,7 +272,7 @@ std::vector<int>& TTTGame::get1DBoard(std::vector<std::vector<int>> inBoard) {
 	return temp;
 }
 
-std::vector<std::vector<int>>& TTTGame::get2DBoard(std::vector<int> inBoard) {
+std::vector<std::vector<int>> TTTGame::get2DBoard(std::vector<int> inBoard) {
 	std::vector<std::vector<int>> myBoard;
 	myBoard = std::vector<std::vector<int>>();
 	int k = 0;
@@ -288,7 +288,7 @@ std::vector<std::vector<int>>& TTTGame::get2DBoard(std::vector<int> inBoard) {
 }
 
 
-std::vector<int>& TTTGame::getFlipedBoard(std::vector<int> myBoard) {
+std::vector<int> TTTGame::getFlipedBoard(std::vector<int> myBoard) {
 	std::vector<int> screen = { 6,7,8,3,4,5,0,1,2 };
 	std::vector<int> temp = std::vector<int>(9, 0);
 	for (int i = 0; i < 9; i++) {
@@ -306,7 +306,7 @@ bool TTTGame::boardEquality(std::vector<int> board1, std::vector<int> board2) {
 	return true;
 }
 
-std::vector<int>& TTTGame::getRotatedBoard(std::vector<int> myBoard) {
+std::vector<int> TTTGame::getRotatedBoard(std::vector<int> myBoard) {
 	std::vector<int> screen = { 2,5,8,1,4,7,0,3,6 };
 	std::vector<int> temp = std::vector<int>(9, 0);
 	for (int i = 0; i < 9; i++) {
@@ -315,7 +315,7 @@ std::vector<int>& TTTGame::getRotatedBoard(std::vector<int> myBoard) {
 	return temp;
 }
 
-std::vector<int>& TTTGame::getPermutedBoard(std::vector<int> inBoard, std::vector<int> inScreen) {
+std::vector<int> TTTGame::getPermutedBoard(std::vector<int> inBoard, std::vector<int> inScreen) {
 	std::vector<int> temp = std::vector<int>(9, 0);
 	for (int i = 0; i < 9; i++) {
 		temp[i] = inBoard[inScreen[i]];

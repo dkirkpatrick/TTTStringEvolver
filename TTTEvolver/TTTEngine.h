@@ -36,6 +36,7 @@ public:
 	int base3OtherBoard(std::vector<std::vector<int>> board);
 	int base3OtherBoardFrom1D(std::vector<int> board);
 	std::vector<std::vector<int>> boardFromBase3(int base3Board);
+	std::vector<int> getValidPlaysFromBase3(int base3Board);
 	std::string getLastPlayString();
 
 	std::vector<int> get1DBoard(std::vector<std::vector<int>> inBoard);

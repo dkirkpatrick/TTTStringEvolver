@@ -231,6 +231,23 @@ std::vector<std::vector<int>> TTTGame::boardFromBase3(int base3Board) {
 	return tempBoard;
 }
 
+std::vector<int> TTTGame::getValidPlaysFromBase3(int base3Board) {
+	std::vector<int> plays = std::vector<int>(); 
+	int tempVal = base3Board;
+	int k = 0; 
+	for (int i = 0; i < myBoardSize; i++) {
+		for (int j = 0; j < myBoardSize; j++) {
+			if (tempVal % 3 == 0) {
+				plays.push_back(k);
+			}
+			k++; 
+			tempVal = tempVal / 3;
+		}
+	}
+	return plays;
+}
+
+
 // Prints a board to cout with formatting 
 void TTTGame::printOtherBoard(std::vector<std::vector<int>> board) {
 	std::cout << std::endl;

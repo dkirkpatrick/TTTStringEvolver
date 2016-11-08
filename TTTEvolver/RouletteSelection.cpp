@@ -14,7 +14,8 @@ RouletteSelector::RouletteSelector(double rateSel, int numEval) : Selector(rateS
 	m_drawVal = 1.0;
 }
 
-RouletteSelector::RouletteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal) : Selector(rateSel, numEval), m_lossVal(lossVal), m_winVal(winVal), m_drawVal(drawVal) {
+RouletteSelector::RouletteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg) : 
+	Selector(rateSel, numEval), m_lossVal(lossVal), m_winVal(winVal), m_drawVal(drawVal), m_startAdvantage(strtAdvtg) {
 	myRef = BoardDictionary();
 }
 
@@ -69,6 +70,10 @@ int RouletteSelector::play(Strategy& s1, TTTPlayer* myPlayer) {
 	int playCount = 0;
 	TTTGame myGame = TTTGame(3);
 
+	if (m_startAdvantage) {
+		myGame.play(4, 1);
+	}
+
 	// Assign player to brain, opponent
 	int s1Plays = Random::getInt(1, 2);
 	int TTTPlayerPlays = (s1Plays == 2 ? 1 : 2);
@@ -104,6 +109,10 @@ int RouletteSelector::play(Strategy& s1, TTTPlayer* myPlayer) {
 int RouletteSelector::play(Strategy& s1, Strategy& s2) {
 	int playCount = 0;
 	TTTGame myGame = TTTGame(3);
+
+	if (m_startAdvantage) {
+		myGame.play(4, 1); 
+	}
 
 	// Assign player to brain, opponent
 	int s1Plays = Random::getInt(1, 2);

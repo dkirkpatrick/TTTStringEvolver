@@ -154,6 +154,7 @@
     <ClCompile Include="StructHeader.cpp" />
     <ClCompile Include="TTTEngine.cpp" />
     <ClCompile Include="TTTPlayers.cpp" />
+    <ClCompile Include="ValidPointMutator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoardDictionary.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="StructHeader.h" />
     <ClInclude Include="TTTEngine.h" />
     <ClInclude Include="TTTPlayers.h" />
+    <ClInclude Include="ValidPointMutator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,6 +15,7 @@ public:
 	BoardDictionary() {
 		initDictionary(); 
 		initMasks(); 
+		initPlays(); 
 	}; 
 
 	std::vector<int> getMask(int i) {
@@ -25,11 +26,17 @@ public:
 		return transformationDictionary;
 	};
 
+	const std::map<int, std::vector<int>>& plays() {
+		return validPlays; 
+	}
+
 private: 
 	void initDictionary(); 
-	void initMasks(); 
+	void initMasks();
+	void initPlays(); 
 	std::vector<std::vector<int>> myMasks;
 	std::map<int, std::vector<int>> transformationDictionary; 
+	std::map<int, std::vector<int>> validPlays; 
 };
 
 #endif

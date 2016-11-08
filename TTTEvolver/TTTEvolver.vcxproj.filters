@@ -51,6 +51,9 @@
     <ClCompile Include="RouletteSelection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ValidPointMutator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EliteSelection.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RouletteSelection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ValidPointMutator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

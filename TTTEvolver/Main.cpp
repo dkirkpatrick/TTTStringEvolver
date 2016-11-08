@@ -36,7 +36,9 @@ int main(int argc, char* argv[]){
 	double drawval; 
 	int numGenerations;
 	int sizePopulation;
-	
+	int outputInterval;
+	bool startAdvantage; 
+
 	//Reads in arguments if present
 	if (argc > 1){
 		randomSeed = atoi(argv[1]); 
@@ -45,6 +47,13 @@ int main(int argc, char* argv[]){
 		drawval = atof(argv[4]); 
 		numGenerations = atoi(argv[5]); 
 		sizePopulation = atoi(argv[6]); 
+		outputInterval = atoi(argv[7]);
+		if (strcmp(argv[8], "true") == 0) {
+			startAdvantage = true; 
+		}
+		else {
+			startAdvantage = false; 
+		}
 	}
 	else{
 		randomSeed = 100; 
@@ -53,23 +62,23 @@ int main(int argc, char* argv[]){
 		drawval = 0.5; 
 		numGenerations = 10;
 		sizePopulation = 200;
+		outputInterval = 5; 
+		startAdvantage = true; 
 	}
 
 	Random::getCommonGenerator().seed(randomSeed); 
 	
 	int sizeStrategy = 3164;
 	std::string distributionStrategy = "random";
-	std::string methodMutation = "point";
+	std::string methodMutation = "valid";
 	double rateMutation = 0.001; 
 	std::string methodSelection = "roulette"; 
 	double rateSelection = 0.40; 
 	int numEvals = 1; 
 
-	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations,
-		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed); 
+	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations, outputInterval, outfilePath,
+		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed, startAdvantage);
 	m_controller.run(); 
-	std::cout << "Done run" << std::endl; 
-	m_controller.outputData(outfilePath);
 
 	std::cout << "Done" << std::endl; 
 		

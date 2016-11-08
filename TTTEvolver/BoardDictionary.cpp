@@ -4,7 +4,8 @@
 */
 
 #include "BoardDictionary.h"
-
+#include "TTTEngine.h"
+#include <iostream>
 void BoardDictionary::initMasks() {
 	myMasks = std::vector<std::vector<int>>();
 	std::vector<int> mask0 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -25,6 +26,14 @@ void BoardDictionary::initMasks() {
 	myMasks.push_back(mask7);
 }
 
+
+void BoardDictionary::initPlays() {
+	TTTGame temp(3); 
+	validPlays = std::map<int, std::vector<int>>();
+	for (auto member : transformationDictionary) {
+		validPlays[member.second.at(2)] = temp.getValidPlaysFromBase3(member.second.at(0)); 
+	}
+}
 
 void BoardDictionary::initDictionary() {
 	transformationDictionary = std::map<int, std::vector<int>>();

@@ -11,11 +11,12 @@
 #include <fstream>
 #include "Random.h"
 #include "TTTPlayers.h"
+#include "ValidPointMutator.h"
 
-PopulationController::PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, std::string metMuta,
-	double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed) : m_sizePopulation(sizePop), 
-	m_sizeStrategy(sizePort), m_distributionStrategy(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta),
-	m_methodSelection(metSel), m_rateSelection(rateSel), m_numEvals(numEval), m_winVal(winVal), m_drawVal(drawVal), m_randSeed(randSeed)
+PopulationController::PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, int outIntvl, std::string outPath, std::string metMuta,
+	double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg) : m_sizePopulation(sizePop),
+	m_sizeStrategy(sizePort), m_distributionStrategy(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta), m_outputInterval(outIntvl),
+	m_methodSelection(metSel), m_rateSelection(rateSel), m_numEvals(numEval), m_winVal(winVal), m_drawVal(drawVal), m_randSeed(randSeed), m_outfilePath(outPath), m_startAdvantage(strtAdvtg)
 {
 	setMutator(metMuta); 
 	setSelector(metSel); 
@@ -24,34 +25,44 @@ PopulationController::PopulationController(int sizePop, int sizePort, std::strin
 }
 
 void PopulationController::run(){
+	outputData(0);
 	for (int i = 0; i < m_numGenerations; i++){
 		std::cout << "Generation: " << i+1 << std::endl;
 		std::vector<Strategy> temp = m_Selector->createNextGen(m_population); 
 		temp = m_Mutator->mutate_all(temp); 
 		m_LineOfDescent.addGen(temp); 
 		m_population = temp; 
+		if ((i+1)%m_outputInterval == 0) {
+			outputData(i+1);
+		}
 	}
 }
 
-void PopulationController::outputData(std::string outputFilePath){
-	std::string LODOut = outputFilePath; 
-	std::string PopulationOut = outputFilePath; 
+void PopulationController::outputData(int numGeneration){
+	std::string LODOut = m_outfilePath;
+	std::string PopulationOut = m_outfilePath;
 	LODOut += "LinesOfDescent/";
 	LODOut += getFilePrefix(); 
+	LODOut += "-"; 
+	LODOut += std::to_string(numGeneration);
 	LODOut += "-LOD.txt"; 
 
 	PopulationOut += "Populations/";
 	PopulationOut += getFilePrefix();
+	PopulationOut += "-";
+	PopulationOut += std::to_string(numGeneration);
 	PopulationOut += "-POP.txt";
 
 
-	std::string testingOut = outputFilePath;
+	std::string testingOut = m_outfilePath;
 	testingOut += getFilePrefix();
+	testingOut += "-";
+	testingOut += std::to_string(numGeneration);
 	testingOut += "-TESTDATA.txt";
 
 	std::ofstream Popfile(PopulationOut);
 	if (Popfile.is_open()){
-		Popfile << getFilePrefix() << "\n";
+		Popfile << getFilePrefix() << "-" << numGeneration << "\n";
 		Popfile << populationToString();
 		Popfile.close();
 	} else {
@@ -61,7 +72,7 @@ void PopulationController::outputData(std::string outputFilePath){
 	std::ofstream testingfile(testingOut);
 	if (testingfile.is_open())
 	{
-		testingfile << getFilePrefix() << "\n";
+		testingfile << getFilePrefix() << "-" << numGeneration << "\n";
 		testingfile << "ID, winsVsPerfect, drawsVsPerfect, winsVsRandom, drawsVsRandom, winsVsPopulation, drawsVsPopulation\n";
 		for (auto p : finalTesting()) {
 			testingfile << p.first;
@@ -75,16 +86,17 @@ void PopulationController::outputData(std::string outputFilePath){
 	else {
 		std::cout << "Could not open " << testingOut << std::endl;
 	}
-
-	std::ofstream LODfile(LODOut);
-	if (LODfile.is_open())
-	{
-		LODfile << getFilePrefix() << "\n";
-		LODfile << m_LineOfDescent.printLineOfDescent();
-		LODfile.close();
-	}
-	else {
-		std::cout << "Could not open " << LODOut << std::endl;
+	if (numGeneration == m_numGenerations) {
+		std::ofstream LODfile(LODOut);
+		if (LODfile.is_open())
+		{
+			LODfile << getFilePrefix() << "-" << numGeneration << "\n";
+			LODfile << m_LineOfDescent.printLineOfDescent();
+			LODfile.close();
+		}
+		else {
+			std::cout << "Could not open " << LODOut << std::endl;
+		}
 	}
 }
 
@@ -92,6 +104,9 @@ void PopulationController::setMutator(std::string metMuta){
 	if (metMuta == "point"){
 		m_methodMutation = metMuta; 
 		m_Mutator = new PointMutator(m_rateMutation, m_sizeStrategy); 
+	} else if (metMuta == "valid") {
+		m_methodMutation = metMuta;
+		m_Mutator = new ValidPointMutator(m_rateMutation, m_sizeStrategy);
 	} else {
 		std::cout << "NO MUTATOR ASSIGNED" << std::endl;
 	}
@@ -104,7 +119,7 @@ void PopulationController::setSelector(std::string metSel){
 		m_Selector = new EliteSelector(m_rateSelection, m_numEvals,m_winVal, 0.0, m_drawVal); 
 	} else if (metSel == "roulette") {
 		m_methodSelection = metSel;
-		m_Selector = new RouletteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal);
+		m_Selector = new RouletteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal, m_startAdvantage);
 	} else {
 		std::cout << "NO SELECTOR ASSIGNED" << std::endl;
 	}

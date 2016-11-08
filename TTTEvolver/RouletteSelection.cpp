@@ -27,21 +27,26 @@ std::vector<Strategy> RouletteSelector::createNextGen(std::vector<Strategy> oldG
 			double value = play(p, p2);
 			if (value > 0) {
 				fitnessArray[p.generationID-1] += m_winVal;
+				fitnessArray[p2.generationID-1] += m_lossVal;
 			}
 			else if (value < 0) {
 				fitnessArray[p.generationID-1] += m_lossVal;
+				fitnessArray[p2.generationID-1] += m_winVal;
 			}
 			else {
 				fitnessArray[p.generationID-1] += m_drawVal;
+				fitnessArray[p2.generationID-1] += m_drawVal;
 			}
-		}
-		if (maxFitness < fitnessArray[p.generationID-1]) {
-			maxFitness = fitnessArray[p.generationID-1];
 		}
 		p.setFitness(fitnessArray[p.generationID-1]); 
 	}
 
-	
+	for (double d : fitnessArray) {
+		if (maxFitness < d) {
+			maxFitness = d;
+		}
+	}
+
 	std::vector<Strategy> newGeneration;
 
 	int genIDcoutner = 1;
@@ -115,7 +120,7 @@ int RouletteSelector::play(Strategy& s1, Strategy& s2) {
 	}
 
 	// Assign player to brain, opponent
-	int s1Plays = Random::getInt(1, 2);
+	int s1Plays = 1;
 	int s2Plays = (s1Plays == 2 ? 1 : 2);
 	bool whoPlays = (s2Plays == 1);
 	int i = 0;

@@ -59,7 +59,7 @@ void PopulationController::outputData(int numGeneration){
 	testingOut += getFilePrefix();
 	testingOut += "-";
 	testingOut += std::to_string(numGeneration);
-	testingOut += "-TESTDATA.txt";
+	testingOut += "-TESTDATA.csv";
 
 	std::ofstream Popfile(PopulationOut);
 	if (Popfile.is_open()){
@@ -191,7 +191,7 @@ void PopulationController::setupPopulation() {
 }
 
 std::string PopulationController::getFilePrefix(){
-	std::string outString = "Strategys-"; 
+	std::string outString = "Strategies-"; 
 	outString += std::to_string(m_sizePopulation); 
 	outString += "-";
 	outString += std::to_string(m_numGenerations);

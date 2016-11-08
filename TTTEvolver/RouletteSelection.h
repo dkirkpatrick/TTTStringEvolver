@@ -14,7 +14,7 @@
 class RouletteSelector : public Selector {
 public:
 	RouletteSelector(double rateSel, int numEval);
-	RouletteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg);
+	RouletteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg, int gamesVsRand);
 	std::vector<Strategy> createNextGen(std::vector<Strategy> oldGeneration);
 
 	int play(Strategy& s1, Strategy& s2);
@@ -27,6 +27,8 @@ private:
 	double m_lossVal;
 	double m_drawVal;
 	bool m_startAdvantage; 
+	TTTPlayer* m_randomPlayer;
+	int m_gamesVsRandom; 
 };
 
 

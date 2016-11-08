@@ -11,10 +11,10 @@
 
 class ValidPointMutator : public Mutator {
 public:
-	ValidPointMutator(double mutaRate, double maxSize);
+	ValidPointMutator(double mutaRate, int maxSize);
 	Strategy mutate(Strategy temp);
 private:
-	double m_maxAdd;
+	int m_maxAdd;
 	BoardDictionary myRef;
 };
 

@@ -15,9 +15,10 @@
 #include "BoardDictionary.h"
 
 PopulationController::PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, int outIntvl, std::string outPath, std::string metMuta,
-	double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg) : m_sizePopulation(sizePop),
+	double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg, int gamesVsRand) : m_sizePopulation(sizePop),
 	m_sizeStrategy(sizePort), m_distributionStrategy(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta), m_outputInterval(outIntvl),
-	m_methodSelection(metSel), m_rateSelection(rateSel), m_numEvals(numEval), m_winVal(winVal), m_drawVal(drawVal), m_randSeed(randSeed), m_outfilePath(outPath), m_startAdvantage(strtAdvtg)
+	m_methodSelection(metSel), m_rateSelection(rateSel), m_numEvals(numEval), m_winVal(winVal), m_drawVal(drawVal), m_randSeed(randSeed), m_outfilePath(outPath), 
+	m_startAdvantage(strtAdvtg), m_gamesVsRandom(gamesVsRand)
 {
 	setMutator(metMuta); 
 	setSelector(metSel); 
@@ -120,7 +121,7 @@ void PopulationController::setSelector(std::string metSel){
 		m_Selector = new EliteSelector(m_rateSelection, m_numEvals,m_winVal, 0.0, m_drawVal); 
 	} else if (metSel == "roulette") {
 		m_methodSelection = metSel;
-		m_Selector = new RouletteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal, m_startAdvantage);
+		m_Selector = new RouletteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal, m_startAdvantage, m_gamesVsRandom);
 	} else {
 		std::cout << "NO SELECTOR ASSIGNED" << std::endl;
 	}
@@ -205,6 +206,8 @@ std::string PopulationController::getFilePrefix(){
 	outString += std::to_string(m_winVal);
 	outString += "-";
 	outString += std::to_string(m_drawVal); 
+	outString += "-";
+	outString += std::to_string(m_gamesVsRandom);
 	outString += "-";
 	outString += std::to_string(m_startAdvantage);
 	outString += "-";

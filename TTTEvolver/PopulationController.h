@@ -15,8 +15,8 @@
 class PopulationController{
 public:
 	PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, int outIntvl,
-							std::string outPath, std::string metMuta, double rateMuta, std::string metSel,
-							double rateSel, int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg);
+			std::string outPath, std::string metMuta, double rateMuta, std::string metSel, double rateSel, 
+			int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg, int gamesVsRand);
 	void run();
 	void outputData(int numGeneration); 
 	void setMutator(std::string metMuta); 
@@ -45,6 +45,7 @@ private:
 	std::string m_outfilePath; 
 	int m_outputInterval;
 	bool m_startAdvantage; 
+	int m_gamesVsRandom; 
 
 	std::vector<Strategy> m_population; 
 	

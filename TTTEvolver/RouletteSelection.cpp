@@ -12,11 +12,13 @@ RouletteSelector::RouletteSelector(double rateSel, int numEval) : Selector(rateS
 	m_winVal = 1.0;
 	m_lossVal = 0.0;
 	m_drawVal = 1.0;
+	m_randomPlayer = new TTTRandomPlayer();
 }
 
-RouletteSelector::RouletteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg) : 
-	Selector(rateSel, numEval), m_lossVal(lossVal), m_winVal(winVal), m_drawVal(drawVal), m_startAdvantage(strtAdvtg) {
+RouletteSelector::RouletteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg, int gamesVsRand) : 
+	Selector(rateSel, numEval), m_lossVal(lossVal), m_winVal(winVal), m_drawVal(drawVal), m_startAdvantage(strtAdvtg), m_gamesVsRandom(gamesVsRand) {
 	myRef = BoardDictionary();
+	m_randomPlayer = new TTTRandomPlayer();
 }
 
 std::vector<Strategy> RouletteSelector::createNextGen(std::vector<Strategy> oldGeneration) {
@@ -38,6 +40,20 @@ std::vector<Strategy> RouletteSelector::createNextGen(std::vector<Strategy> oldG
 				fitnessArray[p2.generationID-1] += m_drawVal;
 			}
 		}
+
+		for (int i = 0; i < m_gamesVsRandom; i++) {
+			double value = play(p, m_randomPlayer);
+			if (value > 0) {
+				fitnessArray[p.generationID - 1] += m_winVal;
+			}
+			else if (value < 0) {
+				fitnessArray[p.generationID - 1] += m_lossVal;
+			}
+			else {
+				fitnessArray[p.generationID - 1] += m_drawVal;
+			}
+		}
+
 		p.setFitness(fitnessArray[p.generationID-1]); 
 	}
 
@@ -121,8 +137,8 @@ int RouletteSelector::play(Strategy& s1, Strategy& s2) {
 
 	// Assign player to brain, opponent
 	int s1Plays = 1;
-	int s2Plays = (s1Plays == 2 ? 1 : 2);
-	bool whoPlays = (s2Plays == 1);
+	int s2Plays = 2;
+	bool whoPlays = false;
 	int i = 0;
 	// Handles the result until a conclusion is reached 
 	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {
@@ -151,8 +167,7 @@ int RouletteSelector::play(Strategy& s1, Strategy& s2) {
 	}
 }
 
-int RouletteSelector::getPlay(Strategy& s, TTTGame& mGame, int whichPlayer)
-{
+int RouletteSelector::getPlay(Strategy& s, TTTGame& mGame, int whichPlayer) {
 	std::vector<int> lookup = myRef.dict().at(mGame.base3Board());
 	std::vector<int> permute = mGame.getInversePermutation(myRef.getMask(lookup.at(1)));
 	int offset = (whichPlayer == 1) ? 0 : 1582;

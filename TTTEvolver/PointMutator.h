@@ -10,10 +10,10 @@
 
 class PointMutator : public Mutator {
 public:
-	PointMutator(double mutaRate, double maxSize);
+	PointMutator(double mutaRate, int maxSize);
 	Strategy mutate(Strategy temp);
 private:
-	double m_maxAdd;
+	int m_maxAdd;
 };
 
 #endif

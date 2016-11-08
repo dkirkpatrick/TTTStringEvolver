@@ -5,7 +5,7 @@
 
 #include "PointMutator.h"
 #include "Random.h"
-PointMutator::PointMutator(double mutaRate, double maxSize) : Mutator(mutaRate), m_maxAdd(maxSize) {};
+PointMutator::PointMutator(double mutaRate, int maxSize) : Mutator(mutaRate), m_maxAdd(maxSize) {};
 
 Strategy PointMutator::mutate(Strategy p)
 {

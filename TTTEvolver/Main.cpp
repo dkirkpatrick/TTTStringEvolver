@@ -38,21 +38,32 @@ int main(int argc, char* argv[]){
 	int sizePopulation;
 	int outputInterval;
 	bool startAdvantage; 
+	int gamesVsRandom;
 
 	//Reads in arguments if present
 	if (argc > 1){
-		randomSeed = atoi(argv[1]); 
-		outfilePath = argv[2];
-		winval = atof(argv[3]); 
-		drawval = atof(argv[4]); 
-		numGenerations = atoi(argv[5]); 
-		sizePopulation = atoi(argv[6]); 
-		outputInterval = atoi(argv[7]);
-		if (strcmp(argv[8], "true") == 0) {
-			startAdvantage = true; 
-		}
-		else {
-			startAdvantage = false; 
+		if (argc < 10){
+			std::cout << "The expected inputs are: "<< std::endl;
+			std::cout << "\trandomSeed outfilePath winVal drawVal numGenerations " << std::endl;
+			std::cout << "\tsizePopulation outputInterval startAdvantage gamesVsRandom" << std::endl;
+			std::cout << "in that order" << std::endl;
+			std::cout << "Exiting." << std::endl;
+			return 0; 
+		} else {
+			randomSeed = atoi(argv[1]);
+			outfilePath = argv[2];
+			winval = atof(argv[3]);
+			drawval = atof(argv[4]);
+			numGenerations = atoi(argv[5]);
+			sizePopulation = atoi(argv[6]);
+			outputInterval = atoi(argv[7]);
+			if (tolower(argv[8][0]) == 't') {
+				startAdvantage = true;
+			}
+			else {
+				startAdvantage = false;
+			}
+			gamesVsRandom = atoi(argv[9]);
 		}
 	}
 	else{
@@ -64,6 +75,7 @@ int main(int argc, char* argv[]){
 		sizePopulation = 200;
 		outputInterval = 5; 
 		startAdvantage = true; 
+		gamesVsRandom = 100; 
 	}
 
 	Random::getCommonGenerator().seed(randomSeed); 
@@ -77,7 +89,7 @@ int main(int argc, char* argv[]){
 	int numEvals = 1; 
 
 	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations, outputInterval, outfilePath,
-		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed, startAdvantage);
+		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed, startAdvantage, gamesVsRandom);
 	m_controller.run(); 
 
 	std::cout << "Done" << std::endl; 

@@ -7,7 +7,7 @@
 #include "Random.h"
 
 
-ValidPointMutator::ValidPointMutator(double mutaRate, double maxSize) : Mutator(mutaRate), m_maxAdd(maxSize) {
+ValidPointMutator::ValidPointMutator(double mutaRate, int maxSize) : Mutator(mutaRate), m_maxAdd(maxSize) {
 	myRef = BoardDictionary();
 };
 

@@ -12,6 +12,7 @@
 #include "Random.h"
 #include "TTTPlayers.h"
 #include "ValidPointMutator.h"
+#include "BoardDictionary.h"
 
 PopulationController::PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, int outIntvl, std::string outPath, std::string metMuta,
 	double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg) : m_sizePopulation(sizePop),
@@ -104,7 +105,7 @@ void PopulationController::setMutator(std::string metMuta){
 	if (metMuta == "point"){
 		m_methodMutation = metMuta; 
 		m_Mutator = new PointMutator(m_rateMutation, m_sizeStrategy); 
-	} else if (metMuta == "valid") {
+	} else if (metMuta == "validPoint") {
 		m_methodMutation = metMuta;
 		m_Mutator = new ValidPointMutator(m_rateMutation, m_sizeStrategy);
 	} else {
@@ -125,24 +126,8 @@ void PopulationController::setSelector(std::string metSel){
 	}
 }
 
-void PopulationController::setupPopulation(){ 
-	if(m_distributionStrategy == "uniform"){
-		int genIDctr = 1; 
-		while(m_population.size() < m_sizePopulation){			
-			Strategy p; 
-			p.fitness = 0.0; 
-			p.generation = 0; 
-			p.generationID = genIDctr; 
-			genIDctr++; 
-			p.parentID = -1; 
-			
-			for(size_t i = 0; i < m_sizeStrategy; i++){
-				p.PlayArray.push_back(1); 
-			}
-
-			m_population.push_back(p); 
-		}
-	} else if (m_distributionStrategy == "random") {
+void PopulationController::setupPopulation() {
+	if (m_distributionStrategy == "uniform") {
 		int genIDctr = 1;
 		while (m_population.size() < m_sizePopulation) {
 			Strategy p;
@@ -153,7 +138,48 @@ void PopulationController::setupPopulation(){
 			p.parentID = -1;
 
 			for (size_t i = 0; i < m_sizeStrategy; i++) {
-				p.PlayArray.push_back(Random::getInt(0,8));
+				p.PlayArray.push_back(1);
+			}
+
+			m_population.push_back(p);
+		}
+	}
+	else if (m_distributionStrategy == "random") {
+		int genIDctr = 1;
+		while (m_population.size() < m_sizePopulation) {
+			Strategy p;
+			p.fitness = 0.0;
+			p.generation = 0;
+			p.generationID = genIDctr;
+			genIDctr++;
+			p.parentID = -1;
+
+			for (size_t i = 0; i < m_sizeStrategy; i++) {
+				p.PlayArray.push_back(Random::getInt(0, 8));
+			}
+
+			m_population.push_back(p);
+		}
+	}
+	else if (m_distributionStrategy == "validRand"){
+		int genIDctr = 1;
+		std::vector<int> temp;
+		BoardDictionary myRef = BoardDictionary(); 
+		while (m_population.size() < m_sizePopulation) {
+			Strategy p;
+			p.fitness = 0.0;
+			p.generation = 0;
+			p.generationID = genIDctr;
+			genIDctr++;
+			p.parentID = -1;
+
+			for (size_t i = 0; i < m_sizeStrategy; i++) {
+				temp = myRef.plays().at(i % (m_sizeStrategy / 2));
+				if (temp.size() > 0) {
+					p.PlayArray.push_back(temp.at(Random::getIndex(temp.size())));
+				} else {
+					p.PlayArray.push_back(0);
+				}
 			}
 
 			m_population.push_back(p);
@@ -179,6 +205,8 @@ std::string PopulationController::getFilePrefix(){
 	outString += std::to_string(m_winVal);
 	outString += "-";
 	outString += std::to_string(m_drawVal); 
+	outString += "-";
+	outString += std::to_string(m_startAdvantage);
 	outString += "-";
 	outString += std::to_string(m_randSeed);
 	return outString; 

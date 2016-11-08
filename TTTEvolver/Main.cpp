@@ -69,8 +69,8 @@ int main(int argc, char* argv[]){
 	Random::getCommonGenerator().seed(randomSeed); 
 	
 	int sizeStrategy = 3164;
-	std::string distributionStrategy = "random";
-	std::string methodMutation = "valid";
+	std::string distributionStrategy = "validRand";
+	std::string methodMutation = "validPoint";
 	double rateMutation = 0.001; 
 	std::string methodSelection = "roulette"; 
 	double rateSelection = 0.40; 

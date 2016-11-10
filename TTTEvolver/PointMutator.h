@@ -11,7 +11,7 @@
 class PointMutator : public Mutator {
 public:
 	PointMutator(double mutaRate, int maxSize);
-	Strategy mutate(Strategy temp);
+	void mutate(std::vector<int>& playArray);
 private:
 	int m_maxAdd;
 };

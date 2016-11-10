@@ -9,18 +9,31 @@
 #include <vector> 
 #include "StructHeader.h"
 #include <algorithm> 
+#include "TTTEngine.h"
+#include "BoardDictionary.h"
+#include "TTTPlayers.h"
 
 class Selector{
 public: 
-	Selector(double rateSel, int numEval);
+	Selector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg, int gamesVsRand);
 
-	Strategy getChild(Strategy parent, int genIDcoutner);
+	virtual std::vector<std::shared_ptr<Strategy>> createNextGen(std::vector<std::shared_ptr<Strategy>>& oldGeneration) = 0;
 
-	virtual std::vector<Strategy> createNextGen(std::vector<Strategy> oldGeneration) = 0; 
+	int play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2);
+	int play(std::shared_ptr<Strategy> s1, TTTPlayer * myPlayer, int startPlayer);
+	int getPlay(std::shared_ptr<Strategy> s, TTTGame& mGame, int whichPlayer);
 
 protected: 
 	double m_rateSelection;
 	int m_numEval; 
+	bool m_startAdvantage;
+	BoardDictionary myRef;
+	double m_winVal;
+	double m_lossVal;
+	double m_drawVal;
+	TTTPlayer* m_randomPlayer;
+	TTTPlayer* m_perfectPlayer;
+	int m_gamesVsRandom;
 }; 
 
 

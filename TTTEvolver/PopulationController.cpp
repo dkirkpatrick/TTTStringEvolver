@@ -23,22 +23,52 @@ PopulationController::PopulationController(int sizePop, int sizePort, std::strin
 	setMutator(metMuta); 
 	setSelector(metSel); 
 	setupPopulation(); 
-	m_LineOfDescent.setup(m_population); 
 }
 
 void PopulationController::run(){
 	outputData(0);
 	for (int i = 0; i < m_numGenerations; i++){
 		std::cout << "Generation: " << i+1 << std::endl;
-		std::vector<Strategy> temp = m_Selector->createNextGen(m_population); 
-		temp = m_Mutator->mutate_all(temp); 
-		m_LineOfDescent.addGen(temp); 
+		std::vector<std::shared_ptr<Strategy>> temp = m_Selector->createNextGen(m_population); 
+		for (int i = 0; i < m_population.size(); i++) {
+			m_population.erase(m_population.begin());
+		}
 		m_population = temp; 
 		if ((i+1)%m_outputInterval == 0) {
 			outputData(i+1);
 		}
 	}
 }
+
+void PopulationController::runLODOnly() {
+	for (int i = 0; i < m_numGenerations; i++) {
+		std::cout << "Generation: " << i + 1 << std::endl;
+		std::vector<std::shared_ptr<Strategy>> temp = m_Selector->createNextGen(m_population);
+		for (int i = 0; i < m_population.size(); i++) {
+			m_population.erase(m_population.begin());
+		}
+		m_population = temp;
+	}
+	m_Selector->createNextGen(m_population);
+	std::string LODOut = m_outfilePath;
+	std::string PopulationOut = m_outfilePath;
+	LODOut += "LinesOfDescent/";
+	LODOut += getFilePrefix();
+	LODOut += "-";
+	LODOut += std::to_string(m_numGenerations);
+	LODOut += "-LOD.txt";
+	std::ofstream LODfile(LODOut);
+	if (LODfile.is_open())
+	{
+		LODfile << "ID, win, loss, draw, winPop, lossPop, drawPop, winRand, lossRand, drawRand, winPerf, lossPerf, drawPerf\n";
+		LODfile << printLineOfDescent();
+		LODfile.close();
+	}
+	else {
+		std::cout << "Could not open " << LODOut << std::endl;
+	}
+}
+
 
 void PopulationController::outputData(int numGeneration){
 	std::string LODOut = m_outfilePath;
@@ -93,7 +123,7 @@ void PopulationController::outputData(int numGeneration){
 		if (LODfile.is_open())
 		{
 			LODfile << getFilePrefix() << "-" << numGeneration << "\n";
-			LODfile << m_LineOfDescent.printLineOfDescent();
+			LODfile << printLineOfDescent();
 			LODfile.close();
 		}
 		else {
@@ -118,7 +148,7 @@ void PopulationController::setMutator(std::string metMuta){
 void PopulationController::setSelector(std::string metSel){
 	if (metSel == "elite"){
 		m_methodSelection = metSel; 
-		m_Selector = new EliteSelector(m_rateSelection, m_numEvals,m_winVal, 0.0, m_drawVal); 
+		m_Selector = new EliteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal, m_startAdvantage, m_gamesVsRandom);
 	} else if (metSel == "roulette") {
 		m_methodSelection = metSel;
 		m_Selector = new RouletteSelector(m_rateSelection, m_numEvals, m_winVal, 0.0, m_drawVal, m_startAdvantage, m_gamesVsRandom);
@@ -128,67 +158,11 @@ void PopulationController::setSelector(std::string metSel){
 }
 
 void PopulationController::setupPopulation() {
-	if (m_distributionStrategy == "uniform") {
-		int genIDctr = 1;
-		while (m_population.size() < m_sizePopulation) {
-			Strategy p;
-			p.fitness = 0.0;
-			p.generation = 0;
-			p.generationID = genIDctr;
-			genIDctr++;
-			p.parentID = -1;
-
-			for (size_t i = 0; i < m_sizeStrategy; i++) {
-				p.PlayArray.push_back(1);
-			}
-
-			m_population.push_back(p);
-		}
+	int genIDctr = 0;
+	BoardDictionary myRef = BoardDictionary(); 
+	while (m_population.size() < m_sizePopulation) {
+		m_population.push_back(std::make_shared<Strategy>(m_distributionStrategy, genIDctr, m_sizeStrategy, myRef, m_Mutator));
 	}
-	else if (m_distributionStrategy == "random") {
-		int genIDctr = 1;
-		while (m_population.size() < m_sizePopulation) {
-			Strategy p;
-			p.fitness = 0.0;
-			p.generation = 0;
-			p.generationID = genIDctr;
-			genIDctr++;
-			p.parentID = -1;
-
-			for (size_t i = 0; i < m_sizeStrategy; i++) {
-				p.PlayArray.push_back(Random::getInt(0, 8));
-			}
-
-			m_population.push_back(p);
-		}
-	}
-	else if (m_distributionStrategy == "validRand"){
-		int genIDctr = 1;
-		std::vector<int> temp;
-		BoardDictionary myRef = BoardDictionary(); 
-		while (m_population.size() < m_sizePopulation) {
-			Strategy p;
-			p.fitness = 0.0;
-			p.generation = 0;
-			p.generationID = genIDctr;
-			genIDctr++;
-			p.parentID = -1;
-
-			for (size_t i = 0; i < m_sizeStrategy; i++) {
-				temp = myRef.plays().at(i % (m_sizeStrategy / 2));
-				if (temp.size() > 0) {
-					p.PlayArray.push_back(temp.at(Random::getIndex(temp.size())));
-				} else {
-					p.PlayArray.push_back(0);
-				}
-			}
-
-			m_population.push_back(p);
-		}
-	} else {
-		std::cout << "NO POPULATION GENERATION ASSIGNED" << std::endl;
-	}
-
 }
 
 std::string PopulationController::getFilePrefix(){
@@ -217,9 +191,9 @@ std::string PopulationController::getFilePrefix(){
 
 std::string PopulationController::populationToString(){
 	std::string outString = ""; 
-	for (std::vector<Strategy>::iterator it = m_population.begin(); it != m_population.end(); it++)
+	for (int i = 0; i < m_population.size(); i++)
 	{
-		outString += it->toString();
+		outString += m_population[i]->toString();
 	}
 
 	return outString; 
@@ -234,15 +208,19 @@ std::map<std::string, std::vector<int>> PopulationController::finalTesting()
 	for (auto member : m_population) {
 		int winsVsRandom = 0, winsVsPerfect = 0, winsVsPopulation = 0;
 		int drawsVsRandom = 0, drawsVsPerfect = 0, drawsVsPopulation = 0;
+		int lossesVsRandom = 0, lossesVsPerfect = 0, lossesVsPopulation = 0;
 
 		for (int i = 0; i < 100; i++) {
-			int perfectResult = ((EliteSelector*)m_Selector)->play(member, myPerfectPlayer);
-			int randomResult = ((EliteSelector*)m_Selector)->play(member, myRandomPlayer);
-			int populationResult = ((EliteSelector*)m_Selector)->play(member, m_population.at(Random::getIndex(m_population.size())));
+			int perfectResult = ((RouletteSelector*)m_Selector)->play(member, myPerfectPlayer, Random::getInt(1, 2));
+			int randomResult = ((RouletteSelector*)m_Selector)->play(member, myRandomPlayer, Random::getInt(1, 2));
+			int populationResult = ((RouletteSelector*)m_Selector)->play(member, m_population.at(Random::getIndex(m_population.size())));
 			if (perfectResult == 1) {
 				winsVsPerfect++; 
 			} else if (perfectResult == 0) {
 				drawsVsPerfect++; 
+			}
+			else {
+				lossesVsPerfect++;
 			}
 			if (randomResult == 1) {
 				winsVsRandom++;
@@ -250,11 +228,16 @@ std::map<std::string, std::vector<int>> PopulationController::finalTesting()
 			else if (randomResult == 0) {
 				drawsVsRandom++;
 			}
+			else {
+				lossesVsRandom++;
+			}
 			if (populationResult == 1) {
 				winsVsPopulation++;
 			}
 			else if (populationResult == 0) {
 				drawsVsPopulation++;
+			} else {
+				lossesVsPopulation++; 
 			}
 		}
 
@@ -265,8 +248,32 @@ std::map<std::string, std::vector<int>> PopulationController::finalTesting()
 		results.push_back(drawsVsRandom);
 		results.push_back(winsVsPopulation);
 		results.push_back(drawsVsPopulation);
-		temp[member.getIDString()] = results; 
+		results.push_back(drawsVsPopulation);
+		temp[member->getIDString()] = results; 
 	}
 
 	return temp;
+}
+
+
+std::string PopulationController::printLineOfDescent() {
+	std::vector<std::shared_ptr<Strategy>> outputVector;
+	std::shared_ptr<Strategy> processingQueue;
+	std::string outputString = "";
+
+	processingQueue = m_population[0];
+
+	while (processingQueue->ancestor) {
+		outputVector.push_back(processingQueue);
+		processingQueue = processingQueue->ancestor;
+	}
+
+	std::reverse(outputVector.begin(), outputVector.end());
+
+	for (int i = 0; i < outputVector.size(); i++)
+	{
+		outputString += outputVector[i]->toStringLOD();
+	}
+
+	return outputString;
 }

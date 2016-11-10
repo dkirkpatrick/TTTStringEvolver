@@ -144,7 +144,6 @@
   <ItemGroup>
     <ClCompile Include="BoardDictionary.cpp" />
     <ClCompile Include="EliteSelection.cpp" />
-    <ClCompile Include="LineOfDescentManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mutator.cpp" />
     <ClCompile Include="PointMutator.cpp" />
@@ -159,7 +158,6 @@
   <ItemGroup>
     <ClInclude Include="BoardDictionary.h" />
     <ClInclude Include="EliteSelection.h" />
-    <ClInclude Include="LineOfDescentManager.h" />
     <ClInclude Include="Mutator.h" />
     <ClInclude Include="PointMutator.h" />
     <ClInclude Include="PopulationController.h" />

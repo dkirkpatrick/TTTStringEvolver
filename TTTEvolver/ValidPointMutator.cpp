@@ -11,23 +11,17 @@ ValidPointMutator::ValidPointMutator(double mutaRate, int maxSize) : Mutator(mut
 	myRef = BoardDictionary();
 };
 
-Strategy ValidPointMutator::mutate(Strategy p)
+void ValidPointMutator::mutate(std::vector<int>& playArray)
 {
-	Strategy ret(p);
 	std::vector<int> temp;
-	int addLoc = Random::getIndex(p.PlayArray.size());
-	for (int i = 0; i < p.PlayArray.size(); i++) {
+	for (int i = 0; i < playArray.size(); i++) {
 		if (Random::P(m_mutationRate)) {
-			temp = myRef.plays().at(i % (p.PlayArray.size() / 2));
+			temp = myRef.plays().at(i % (playArray.size() / 2));
 			if (temp.size() > 0) {
-				ret.PlayArray[i] = temp.at(Random::getIndex(temp.size())); 
+				playArray[i] = temp.at(Random::getIndex(temp.size()));
 			} else {
-				ret.PlayArray[i] = 0;
+				playArray[i] = 0;
 			}
 		}
-		else {
-			ret.PlayArray[i] = p.PlayArray[i];
-		}
 	}
-	return ret;
 };

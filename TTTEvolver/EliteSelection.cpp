@@ -7,33 +7,66 @@
 #include "Random.h"
 #include <iostream>
 
-EliteSelector::EliteSelector(double rateSel, int numEval) : Selector(rateSel, numEval){
-	myRef = BoardDictionary();
-	m_winVal = 1.0; 
-	m_lossVal = 0.0; 
-	m_drawVal = 1.0;
-}
-
-EliteSelector::EliteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal): Selector(rateSel, numEval), m_lossVal(lossVal), m_winVal(winVal), m_drawVal(drawVal) {
+EliteSelector::EliteSelector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg, int gamesVsRand): 
+	Selector(rateSel, numEval, winVal, lossVal, drawVal, strtAdvtg, gamesVsRand) {
 	myRef = BoardDictionary();
 }
 
-std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGeneration){
+std::vector<std::shared_ptr<Strategy>> EliteSelector::createNextGen(std::vector<std::shared_ptr<Strategy>>& oldGeneration){
 	std::vector<double> fitnessArray = std::vector<double>(oldGeneration.size(), 0.0);
-	for (Strategy p : oldGeneration) {
-		for (Strategy p2 : oldGeneration) {
-			double value = play(p, p2);
+	for (int i = 0; i < oldGeneration.size(); i++) {
+		for (int j = 0; j < oldGeneration.size(); j++) {
+			double value = play(oldGeneration[i], oldGeneration[j]);
 			if (value > 0) {
-				fitnessArray[p.generationID - 1] += m_winVal;
+				fitnessArray[i] += m_winVal;
+				fitnessArray[j] += m_lossVal;
+				oldGeneration[i]->win++;
+				oldGeneration[j]->loss++;
+				oldGeneration[i]->winPop++;
+				oldGeneration[j]->lossPop++;
+
 			}
 			else if (value < 0) {
-				fitnessArray[p.generationID - 1] += m_lossVal;
+				fitnessArray[i] += m_lossVal;
+				fitnessArray[j] += m_winVal;
+				oldGeneration[i]->loss++;
+				oldGeneration[j]->win++;
+				oldGeneration[i]->lossPop++;
+				oldGeneration[j]->winPop++;
 			}
 			else {
-				fitnessArray[p.generationID - 1] += m_drawVal;
+				fitnessArray[i] += m_drawVal;
+				fitnessArray[j] += m_drawVal;
+				oldGeneration[i]->draw++;
+				oldGeneration[j]->draw++;
+				oldGeneration[i]->drawPop++;
+				oldGeneration[j]->drawPop++;
 			}
 		}
-		p.setFitness(fitnessArray[p.generationID - 1]);
+
+		for (int j = 0; j < m_gamesVsRandom; j++) {
+			double value = play(oldGeneration[i], m_randomPlayer, Random::getInt(1, 2));
+			if (value > 0) {
+				fitnessArray[i] += m_winVal;
+				oldGeneration[i]->win++;
+				oldGeneration[i]->winRand++;
+			}
+			else if (value < 0) {
+				fitnessArray[i] += m_lossVal;
+				oldGeneration[i]->loss++;
+				oldGeneration[i]->lossRand++;
+			}
+			else {
+				fitnessArray[i] += m_drawVal;
+				oldGeneration[i]->draw++;
+				oldGeneration[i]->drawRand++;
+			}
+		}
+
+	}
+
+	for (int i = 0; i < oldGeneration.size(); i++) {
+		oldGeneration[i]->fitness = fitnessArray[i];
 	}
 
 	std::sort(oldGeneration.begin(), oldGeneration.end()); 
@@ -41,97 +74,16 @@ std::vector<Strategy> EliteSelector::createNextGen(std::vector<Strategy> oldGene
 
 	int populationProportion = (int) std::ceil(m_rateSelection*oldGeneration.size()); 
 
-	std::vector<Strategy> newGeneration; 
+	std::vector<std::shared_ptr<Strategy>> newGeneration;
 
 	int genIDcoutner = 1; 
 
 	while(newGeneration.size() < oldGeneration.size()){
 		int selectionVar  = Random::getIndex(populationProportion);
-		Strategy parent = oldGeneration.at(selectionVar); 
-		newGeneration.push_back(getChild(parent, genIDcoutner));
+		std::shared_ptr<Strategy> parent = oldGeneration.at(selectionVar);
+		newGeneration.push_back(std::make_shared<Strategy>(parent, genIDcoutner));
 		genIDcoutner++;
 	}
 
 	return newGeneration; 
-}
-
-
-int EliteSelector::play(Strategy& s1, TTTPlayer* myPlayer) {
-	int playCount = 0;
-	TTTGame myGame = TTTGame(3);
-
-	// Assign player to brain, opponent
-	int s1Plays = Random::getInt(1, 2);
-	int TTTPlayerPlays = (s1Plays == 2 ? 1 : 2);
-	bool whoPlays = (TTTPlayerPlays == 1);
-	int i = 0;
-	// Handles the result until a conclusion is reached 
-	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {
-		i++;
-		if (whoPlays) {
-			std::vector<int> otherPlay = myPlayer->getPlay(myGame, TTTPlayerPlays);
-			myGame.play(otherPlay.at(0), otherPlay.at(1), TTTPlayerPlays);
-			whoPlays = false;
-		}
-		else {
-			int myPlay = getPlay(s1, myGame, s1Plays);
-			myGame.play(myPlay, s1Plays);
-			whoPlays = true;
-		}
-	}
-
-	// Outputs based on game results 
-	if (myGame.gameDraw()) {
-		return 0;
-	}
-	else if (myGame.gameWon() == s1Plays) {
-		return 1;
-	}
-	else {
-		return -1;
-	}
-}
-
-int EliteSelector::play(Strategy& s1, Strategy& s2) {
-	int playCount = 0;
-	TTTGame myGame = TTTGame(3);
-	
-	// Assign player to brain, opponent
-	int s1Plays = Random::getInt(1, 2);
-	int s2Plays = (s1Plays == 2 ? 1 : 2);
-	bool whoPlays = (s2Plays == 1);
-	int i = 0; 
-	// Handles the result until a conclusion is reached 
-	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {
-		i++;
-		if (whoPlays) {
-			int otherPlay = getPlay(s2, myGame, s2Plays);
-			myGame.play(otherPlay, s2Plays);
-			whoPlays = false;
-		}
-		else {
-			int myPlay = getPlay(s1, myGame, s1Plays);
-			myGame.play(myPlay, s1Plays);
-			whoPlays = true;
-		}
-	}
-
-	// Outputs based on game results 
-	if (myGame.gameDraw()) {
-		return 0;
-	}
-	else if (myGame.gameWon() == s1Plays) {
-		return 1;
-	}
-	else {
-		return -1;
-	}
-}
-
-int EliteSelector::getPlay(Strategy& s, TTTGame& mGame, int whichPlayer)
-{
-	std::vector<int> lookup = myRef.dict().at(mGame.base3Board()); 
-	std::vector<int> permute = mGame.getInversePermutation(myRef.getMask(lookup.at(1))); 
-	int offset = (whichPlayer == 1) ? 0 : 1582; 
-	return permute.at(s.PlayArray.at(lookup.at(2)+offset));
 }

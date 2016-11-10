@@ -70,12 +70,12 @@ int main(int argc, char* argv[]){
 		randomSeed = 100; 
 		outfilePath = "./";
 		winval = 1.0; 
-		drawval = 0.5; 
-		numGenerations = 10;
+		drawval = 1.0; 
+		numGenerations = 100;
 		sizePopulation = 200;
-		outputInterval = 5; 
-		startAdvantage = true; 
-		gamesVsRandom = 100; 
+		outputInterval = 100; 
+		startAdvantage = false; 
+		gamesVsRandom = 200; 
 	}
 
 	Random::getCommonGenerator().seed(randomSeed); 
@@ -83,14 +83,15 @@ int main(int argc, char* argv[]){
 	int sizeStrategy = 3164;
 	std::string distributionStrategy = "validRand";
 	std::string methodMutation = "validPoint";
-	double rateMutation = 0.001; 
+	//double rateMutation = 0.001;
+	double rateMutation = 0.001;
 	std::string methodSelection = "roulette"; 
 	double rateSelection = 0.40; 
 	int numEvals = 1; 
 
 	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations, outputInterval, outfilePath,
 		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed, startAdvantage, gamesVsRandom);
-	m_controller.run(); 
+	m_controller.runLODOnly(); 
 
 	std::cout << "Done" << std::endl; 
 		

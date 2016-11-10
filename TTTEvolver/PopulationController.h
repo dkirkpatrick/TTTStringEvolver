@@ -8,7 +8,6 @@
 
 #include "Mutator.h"
 #include "Selector.h"
-#include "LineOfDescentManager.h"
 #include <string>
 #include <map>
 
@@ -18,17 +17,20 @@ public:
 			std::string outPath, std::string metMuta, double rateMuta, std::string metSel, double rateSel, 
 			int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg, int gamesVsRand);
 	void run();
+	void runLODOnly();
 	void outputData(int numGeneration); 
 	void setMutator(std::string metMuta); 
 	void setSelector(std::string metSel);
 	std::string getFilePrefix(); 
 	std::string populationToString(); 
-	const std::vector<Strategy> getPopulation() {
+	const std::vector<std::shared_ptr<Strategy>> getPopulation() {
 		return m_population;
 	};
 	std::map<std::string, std::vector<int>> finalTesting(); 
 
 private: 
+	std::string printLineOfDescent();
+
 	void setupPopulation(); 
 	size_t m_sizePopulation;
 	size_t m_sizeStrategy;
@@ -47,11 +49,10 @@ private:
 	bool m_startAdvantage; 
 	int m_gamesVsRandom; 
 
-	std::vector<Strategy> m_population; 
+	std::vector<std::shared_ptr<Strategy>> m_population; 
 	
 	Mutator* m_Mutator; 
 	Selector* m_Selector; 
-	LineOfDescent m_LineOfDescent; 
 };
 
 #endif

@@ -7,17 +7,11 @@
 #include "Random.h"
 PointMutator::PointMutator(double mutaRate, int maxSize) : Mutator(mutaRate), m_maxAdd(maxSize) {};
 
-Strategy PointMutator::mutate(Strategy p)
+void PointMutator::mutate(std::vector<int>& playArray)
 {
-	Strategy ret(p);
-
-	int addLoc = Random::getIndex(p.PlayArray.size());
-	for (int i = 0; i < p.PlayArray.size(); i++) {
+	for (int i = 0; i < playArray.size(); i++) {
 		if (Random::P(m_mutationRate)) {
-			ret.PlayArray[i] = Random::getInt(0, 8);
-		} else {
-			ret.PlayArray[i] = p.PlayArray[i];
+			playArray[i] = Random::getInt(0, 8);
 		}
 	}
-	return ret;
 };

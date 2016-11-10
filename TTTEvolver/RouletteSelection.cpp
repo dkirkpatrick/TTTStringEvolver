@@ -95,7 +95,7 @@ std::vector<std::shared_ptr<Strategy>> RouletteSelector::createNextGen(std::vect
 		n++; 
 	}
 	std::shared_ptr<Strategy> p = oldGeneration.at(who); 
-	std::cout << "MaxFitness: " << maxFitness << "   " << "Who: " << who << "   " << "Losses/Draws/Wins:" << p->loss << '/' << p->draw << '/' << p->win << "   Fitness: " << fitnessArray[who] << std::endl;
+	std::cout << "MaxFitness: " << maxFitness << "   " << "StrategyID: " << who << "   " << "Losses/Draws/Wins:" << p->loss << '/' << p->draw << '/' << p->win << std::endl;
 
 	std::vector<std::shared_ptr<Strategy>> newGeneration;
 

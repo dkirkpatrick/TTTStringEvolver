@@ -6,7 +6,7 @@
 #include "Selector.h"
 
 Selector::Selector(double rateSel, int numEval, double winVal, double lossVal, double drawVal, bool strtAdvtg, int gamesVsRand) : 
-	m_rateSelection(rateSel), m_numEval(numEval), m_lossVal(lossVal), m_winVal(winVal), m_drawVal(drawVal), m_startAdvantage(strtAdvtg), m_gamesVsRandom(gamesVsRand) {
+	m_rateSelection(rateSel), m_numEval(numEval), m_winVal(winVal), m_lossVal(lossVal), m_drawVal(drawVal), m_startAdvantage(strtAdvtg), m_gamesVsRandom(gamesVsRand) {
 	myRef = BoardDictionary();
 	m_randomPlayer = new TTTRandomPlayer();
 	m_perfectPlayer = new TTTMinimaxPlayer();

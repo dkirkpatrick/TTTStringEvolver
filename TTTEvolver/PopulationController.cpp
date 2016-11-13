@@ -166,25 +166,25 @@ void PopulationController::setupPopulation() {
 }
 
 std::string PopulationController::getFilePrefix(){
-	std::string outString = "Strategies-"; 
+	std::string outString = "Strategies-p"; 
 	outString += std::to_string(m_sizePopulation); 
-	outString += "-";
+	outString += "-g";
 	outString += std::to_string(m_numGenerations);
-	outString += "-";
+	outString += "-rM";
 	outString += std::to_string(m_rateMutation);
 	outString += "-";
 	outString += m_methodSelection;
-	outString += "-";
+	outString += "-rS";
 	outString += std::to_string(m_rateSelection);
-	outString += "-";
+	outString += "-w";
 	outString += std::to_string(m_winVal);
-	outString += "-";
+	outString += "-d";
 	outString += std::to_string(m_drawVal); 
-	outString += "-";
+	outString += "-gR";
 	outString += std::to_string(m_gamesVsRandom);
-	outString += "-";
+	outString += "-sA";
 	outString += std::to_string(m_startAdvantage);
-	outString += "-";
+	outString += "-s";
 	outString += std::to_string(m_randSeed);
 	return outString; 
 }

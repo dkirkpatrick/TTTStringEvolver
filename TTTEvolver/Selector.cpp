@@ -52,7 +52,7 @@ int Selector::play(std::shared_ptr<Strategy> s1, TTTPlayer* myPlayer, int startP
 	}
 }
 
-int Selector::play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2) {
+int Selector::play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2, int startPlayer) {
 	int playCount = 0;
 	TTTGame myGame = TTTGame(3);
 
@@ -61,9 +61,9 @@ int Selector::play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2) {
 	}
 
 	// Assign player to brain, opponent
-	int s1Plays = 1;
-	int s2Plays = 2;
-	bool whoPlays = false;
+	int s1Plays = startPlayer;
+	int s2Plays = (s1Plays == 2 ? 1 : 2);
+	bool whoPlays = (s2Plays == 1);
 	int i = 0;
 	// Handles the result until a conclusion is reached 
 	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {

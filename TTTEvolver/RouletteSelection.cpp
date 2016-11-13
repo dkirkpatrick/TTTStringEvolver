@@ -19,31 +19,21 @@ std::vector<std::shared_ptr<Strategy>> RouletteSelector::createNextGen(std::vect
 	std::vector<double> fitnessArray = std::vector<double>(oldGeneration.size(), 0.0); 
 	for(int i = 0; i < oldGeneration.size(); i++){
 		for (int j = 0; j < oldGeneration.size(); j++) {
-			double value = play(oldGeneration[i], oldGeneration[j]);
+			double value = play(oldGeneration[i], oldGeneration[j], 1);
 			if (value > 0) {
 				fitnessArray[i] += m_winVal;
-				fitnessArray[j] += m_lossVal;
 				oldGeneration[i]->win++;
-				oldGeneration[j]->loss++;
 				oldGeneration[i]->winPop++;
-				oldGeneration[j]->lossPop++;
-
 			}
 			else if (value < 0) {
 				fitnessArray[i] += m_lossVal;
-				fitnessArray[j] += m_winVal;
 				oldGeneration[i]->loss++;
-				oldGeneration[j]->win++;
 				oldGeneration[i]->lossPop++;
-				oldGeneration[j]->winPop++;
 			}
 			else {
 				fitnessArray[i] += m_drawVal;
-				fitnessArray[j] += m_drawVal;
 				oldGeneration[i]->draw++;
-				oldGeneration[j]->draw++;
 				oldGeneration[i]->drawPop++;
-				oldGeneration[j]->drawPop++;
 			}
 		}
 

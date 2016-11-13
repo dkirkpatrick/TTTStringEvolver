@@ -19,7 +19,7 @@ public:
 
 	virtual std::vector<std::shared_ptr<Strategy>> createNextGen(std::vector<std::shared_ptr<Strategy>>& oldGeneration) = 0;
 
-	int play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2);
+	int play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2, int startPlayer);
 	int play(std::shared_ptr<Strategy> s1, TTTPlayer * myPlayer, int startPlayer);
 	int getPlay(std::shared_ptr<Strategy> s, TTTGame& mGame, int whichPlayer);
 

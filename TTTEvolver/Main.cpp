@@ -27,6 +27,19 @@ int main(int argc, char* argv[]){
 
 	std::cout << argv[0] << std::endl;
 
+	BoardDictionary myTestDict = BoardDictionary(); 
+	TTTGame myTestGame = TTTGame(3); 
+	
+	
+	/*
+	for (auto d : myTestDict.dict()) {
+		if (d.first != myTestGame.base3OtherBoardFrom1D(myTestGame.getPermutedBoard(myTestGame.get1DBoard(myTestGame.boardFromBase3(d.second[0])), myTestGame.getInversePermutation(myTestDict.getMask(d.second[1]))))) {
+			std::cout << "HERE" << std::endl; 
+		}
+	}
+
+	*/
+	
 	//String path to the output file directory
 	std::string outfilePath;
 
@@ -95,6 +108,6 @@ int main(int argc, char* argv[]){
 	m_controller.runLODOnly(); 
 
 	std::cout << "Done" << std::endl; 
-		
+
 	return 0;
 }

@@ -17,7 +17,8 @@
 
 #include "PopulationController.h"
 #include "Random.h"
-
+#include "BoardDictionary.h"
+#include "TTTEngine.h"
 // Takes seed, output file path, win reward, and draw reward 
 // as input in that order with types:
 // int, string, double, double 
@@ -95,6 +96,5 @@ int main(int argc, char* argv[]){
 
 	std::cout << "Done" << std::endl; 
 		
-
 	return 0;
 }

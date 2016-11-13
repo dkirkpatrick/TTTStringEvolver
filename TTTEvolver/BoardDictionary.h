@@ -5,6 +5,7 @@
 
 #include <map>
 #include <vector>
+#include <iostream>
 
 #ifndef __BOARDDICTIONARY__
 #define __BOARDDICTIONARY__

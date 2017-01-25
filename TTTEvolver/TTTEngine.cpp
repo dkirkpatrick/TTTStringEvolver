@@ -1,10 +1,6 @@
-/*
-*	Part of the TTTStringEvolver by Douglas Kirkpatrick
-*	Copyright (c) 2016, all rights reserved
-*/
-
 //
 //  TTTEngine.cpp
+//  BasicMarkovBrainTemplate
 //
 //  Created by Douglas Kirkpatrick on 3/30/16.
 //  Copyright (c) 2016 Douglas Kirkpatrick. All rights reserved.
@@ -38,20 +34,22 @@ TTTGame::TTTGame(int boardSize) {
 		}
 		myBoard.push_back(temp);
 	}
+	std::vector<int> mask0 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 	std::vector<int> mask1 = { 0, 3, 6, 1, 4, 7, 2, 5, 8 };
-	std::vector<int> mask2 = { 8, 7, 6, 5, 4, 3, 2, 1, 0 };
-	std::vector<int> mask3 = { 2, 1, 0, 5, 4, 3, 8, 7, 6 };
-	std::vector<int> mask4 = { 8, 5, 2, 7, 4, 1, 6, 3, 0 };
+	std::vector<int> mask2 = { 2, 1, 0, 5, 4, 3, 8, 7, 6 };
+	std::vector<int> mask3 = { 2, 5, 8, 1, 4, 7, 0, 3, 6 };
+	std::vector<int> mask4 = { 6, 3, 0, 7, 4, 1, 8, 5, 2 };
 	std::vector<int> mask5 = { 6, 7, 8, 3, 4, 5, 0, 1, 2 };
-	std::vector<int> mmask6 = { 6, 3, 0, 7, 4, 1, 8, 5, 2 };
-	std::vector<int> mmask7 = { 2, 5, 8, 1, 4, 7, 0, 3, 6 };
+	std::vector<int> mask6 = { 8, 5, 2, 7, 4, 1, 6, 3, 0 };
+	std::vector<int> mask7 = { 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+	myMasks.push_back(mask0);
 	myMasks.push_back(mask1);
 	myMasks.push_back(mask2);
 	myMasks.push_back(mask3);
 	myMasks.push_back(mask4);
 	myMasks.push_back(mask5);
-	myMasks.push_back(mmask6);
-	myMasks.push_back(mmask7);
+	myMasks.push_back(mask6);
+	myMasks.push_back(mask7);
 
 }
 
@@ -232,21 +230,20 @@ std::vector<std::vector<int>> TTTGame::boardFromBase3(int base3Board) {
 }
 
 std::vector<int> TTTGame::getValidPlaysFromBase3(int base3Board) {
-	std::vector<int> plays = std::vector<int>(); 
+	std::vector<int> plays = std::vector<int>();
 	int tempVal = base3Board;
-	int k = 0; 
+	int k = 0;
 	for (int i = 0; i < myBoardSize; i++) {
 		for (int j = 0; j < myBoardSize; j++) {
 			if (tempVal % 3 == 0) {
 				plays.push_back(k);
 			}
-			k++; 
+			k++;
 			tempVal = tempVal / 3;
 		}
 	}
 	return plays;
 }
-
 
 // Prints a board to cout with formatting 
 void TTTGame::printOtherBoard(std::vector<std::vector<int>> board) {
@@ -342,13 +339,15 @@ std::vector<int> TTTGame::getPermutedBoard(std::vector<int> inBoard, std::vector
 
 std::vector<int> TTTGame::getInversePermutation(std::vector<int> inPermutation)
 {
-	if (boardEquality(myMasks[5], inPermutation)) {
-		return myMasks[6];
+	std::vector<int> mask3 = { 2, 5, 8, 1, 4, 7, 0, 3, 6 };
+	std::vector<int> mask4 = { 6, 3, 0, 7, 4, 1, 8, 5, 2 };
+	if (boardEquality(mask4, inPermutation)) {
+		return mask3;
 	}
-	if (boardEquality(myMasks[6], inPermutation)) {
-		return myMasks[5];
+	if (boardEquality(mask3, inPermutation)) {
+		return mask4;
 	}
-	return inPermutation;
+	return std::vector<int>(inPermutation);
 }
 
 std::pair<int, std::vector<int>> TTTGame::getOtherMinimumBoardAndPermutation(std::vector<int> inBoard)
@@ -358,8 +357,22 @@ std::pair<int, std::vector<int>> TTTGame::getOtherMinimumBoardAndPermutation(std
 	for (auto v : myMasks) {
 		int test = base3OtherBoard(get2DBoard(getPermutedBoard(inBoard, v)));
 		if (test < minValue) {
-			minValue = test; 
-			outMask = v; 
+			minValue = test;
+			outMask = v;
+		}
+	}
+	return std::pair<int, std::vector<int>>(minValue, outMask);
+}
+
+std::pair<int, std::vector<int>> TTTGame::getOtherMinimumBoardAndPermutationUsingSubset(std::vector<int> inBoard, std::vector<int> whichPermutations)
+{
+	int minValue = base3OtherBoard(get2DBoard(inBoard));
+	std::vector<int> outMask = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+	for (auto v : whichPermutations) {
+		int test = base3OtherBoard(get2DBoard(getPermutedBoard(inBoard, myMasks[v])));
+		if (test < minValue) {
+			minValue = test;
+			outMask = myMasks[v];
 		}
 	}
 	return std::pair<int, std::vector<int>>(minValue, outMask);
@@ -367,7 +380,7 @@ std::pair<int, std::vector<int>> TTTGame::getOtherMinimumBoardAndPermutation(std
 
 std::pair<int, std::vector<int>> TTTGame::getMinimumBoardAndPermutation()
 {
-	std::vector<int> tempBoard = get1DBoard(myBoard); 
+	std::vector<int> tempBoard = get1DBoard(myBoard);
 	int minValue = base3OtherBoardFrom1D(tempBoard);
 	std::vector<int> outMask = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 	for (auto v : myMasks) {
@@ -378,4 +391,49 @@ std::pair<int, std::vector<int>> TTTGame::getMinimumBoardAndPermutation()
 		}
 	}
 	return std::pair<int, std::vector<int>>(minValue, outMask);
+}
+
+std::pair<int, std::vector<int>> TTTGame::getMinimumBoardAndPermutationUsingSubset(std::vector<int> whichPermutations)
+{
+	std::vector<int> tempBoard = get1DBoard(myBoard);
+	int minValue = base3OtherBoardFrom1D(tempBoard);
+	std::vector<int> outMask = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+	for (auto v : whichPermutations) {
+		int test = base3OtherBoardFrom1D(getPermutedBoard(tempBoard, myMasks[v]));
+		if (test < minValue) {
+			minValue = test;
+			outMask = myMasks[v];
+		}
+	}
+	return std::pair<int, std::vector<int>>(minValue, outMask);
+}
+
+std::pair<int, int> TTTGame::getMinimumBoardAndPermutationFromBase3(int inBoard)
+{
+	std::vector<int> tempBoard = get1DBoard(boardFromBase3(inBoard));
+	int minValue = inBoard;
+	int outMask = 0;
+	for (int v = 0; v < myMasks.size(); v++) {
+		int test = base3OtherBoardFrom1D(getPermutedBoard(tempBoard, myMasks[v]));
+		if (test < minValue) {
+			minValue = test;
+			outMask = v;
+		}
+	}
+	return std::pair<int, int>(minValue, outMask);
+}
+
+std::pair<int, int> TTTGame::getMinimumBoardAndPermutationFromBase3UsingSubset(int inBoard, std::vector<int> whichPermutations)
+{
+	std::vector<int> tempBoard = get1DBoard(boardFromBase3(inBoard));
+	int minValue = inBoard;
+	int outMask = 0;
+	for (auto v : whichPermutations) {
+		int test = base3OtherBoardFrom1D(getPermutedBoard(tempBoard, myMasks[v]));
+		if (test < minValue) {
+			minValue = test;
+			outMask = v;
+		}
+	}
+	return std::pair<int, int>(minValue, outMask);
 }

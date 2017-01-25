@@ -1,8 +1,3 @@
-/*
-*	Part of the TTTStringEvolver by Douglas Kirkpatrick
-*	Copyright (c) 2016, all rights reserved
-*/
-
 //
 //  TTTEngine.h
 //
@@ -40,15 +35,18 @@ public:
 	std::string getLastPlayString();
 
 	std::vector<int> get1DBoard(std::vector<std::vector<int>> inBoard);
-	std::vector<std::vector<int>> get2DBoard(std::vector<int> inBoard); 
+	std::vector<std::vector<int>> get2DBoard(std::vector<int> inBoard);
 	std::vector<int> getFlipedBoard(std::vector<int> myBoard);
 	bool boardEquality(std::vector<int> board1, std::vector<int> board2);
 	std::vector<int> getRotatedBoard(std::vector<int> myBoard);
 	std::vector<int> getPermutedBoard(std::vector<int> myBoard, std::vector<int> myScreen);
 	std::vector<int> getInversePermutation(std::vector<int> inPermutation);
 	std::pair<int, std::vector<int>> getOtherMinimumBoardAndPermutation(std::vector<int> myBoard);
-	std::pair<int, std::vector<int>> getMinimumBoardAndPermutation(); 
-
+	std::pair<int, std::vector<int>> getMinimumBoardAndPermutation();
+	std::pair<int, std::vector<int>> getOtherMinimumBoardAndPermutationUsingSubset(std::vector<int> inBoard, std::vector<int> whichPermutations);
+	std::pair<int, std::vector<int>> getMinimumBoardAndPermutationUsingSubset(std::vector<int> whichPermutations);
+	std::pair<int, int> getMinimumBoardAndPermutationFromBase3(int board);
+	std::pair<int, int> getMinimumBoardAndPermutationFromBase3UsingSubset(int board, std::vector<int> whichPermutations);
 	// sets the turn restrictions to a given value
 	void setTurnRestrictions(bool value) {
 		turnRestrictions = value;

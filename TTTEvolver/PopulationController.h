@@ -10,14 +10,16 @@
 #include "Selector.h"
 #include <string>
 #include <map>
+#include <vector>
 
 class PopulationController{
 public:
-	PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, int outIntvl,
+	PopulationController(int sizePop, std::vector<int> whichMasks, std::string distPort, int numGen, int outIntvl,
 			std::string outPath, std::string metMuta, double rateMuta, std::string metSel, double rateSel, 
 			int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg, int gamesVsRand);
 	void run();
 	void runLODOnly();
+	void runLODandDistributions();
 	void outputData(int numGeneration); 
 	void setMutator(std::string metMuta); 
 	void setSelector(std::string metSel);
@@ -31,7 +33,7 @@ public:
 private: 
 	std::string printLineOfDescent();
 
-	void setupPopulation(); 
+	void setupPopulation(std::vector<int> whichMasks); 
 	size_t m_sizePopulation;
 	size_t m_sizeStrategy;
 	std::string m_distributionStrategy;

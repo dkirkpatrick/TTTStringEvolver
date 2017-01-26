@@ -14,15 +14,15 @@
 #include "ValidPointMutator.h"
 #include "BoardDictionary.h"
 
-PopulationController::PopulationController(int sizePop, int sizePort, std::string distPort, int numGen, int outIntvl, std::string outPath, std::string metMuta,
+PopulationController::PopulationController(int sizePop, std::vector<int> whichMasks, std::string distPort, int numGen, int outIntvl, std::string outPath, std::string metMuta,
 	double rateMuta, std::string metSel, double rateSel, int numEval, double winVal, double drawVal, int randSeed, bool strtAdvtg, int gamesVsRand) : m_sizePopulation(sizePop),
-	m_sizeStrategy(sizePort), m_distributionStrategy(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta), m_outputInterval(outIntvl),
+	m_distributionStrategy(distPort), m_numGenerations(numGen), m_methodMutation(metMuta), m_rateMutation(rateMuta), m_outputInterval(outIntvl),
 	m_methodSelection(metSel), m_rateSelection(rateSel), m_numEvals(numEval), m_winVal(winVal), m_drawVal(drawVal), m_randSeed(randSeed), m_outfilePath(outPath), 
 	m_startAdvantage(strtAdvtg), m_gamesVsRandom(gamesVsRand)
 {
 	setMutator(metMuta); 
 	setSelector(metSel); 
-	setupPopulation(); 
+	setupPopulation(whichMasks); 
 }
 
 void PopulationController::run(){
@@ -50,6 +50,71 @@ void PopulationController::runLODOnly() {
 		m_population = temp;
 	}
 	m_Selector->createNextGen(m_population);
+	std::string LODOut = m_outfilePath;
+	std::string PopulationOut = m_outfilePath;
+	LODOut += "LinesOfDescent/";
+	LODOut += getFilePrefix();
+	LODOut += "-";
+	LODOut += std::to_string(m_numGenerations);
+	LODOut += "-LOD.txt";
+	std::ofstream LODfile(LODOut);
+	if (LODfile.is_open())
+	{
+		LODfile << "ID, win, loss, draw, winPop, lossPop, drawPop, winRand, lossRand, drawRand, winPerf, lossPerf, drawPerf\n";
+		LODfile << printLineOfDescent();
+		LODfile.close();
+	}
+	else {
+		std::cout << "Could not open " << LODOut << std::endl;
+	}
+}
+
+void PopulationController::runLODandDistributions() {
+	for (int i = 0; i < m_numGenerations; i++) {
+		std::cout << "Generation: " << i + 1 << std::endl;
+		std::vector<std::shared_ptr<Strategy>> temp = m_Selector->createNextGen(m_population);
+		for (int i = 0; i < m_population.size(); i++) {
+			m_population.erase(m_population.begin());
+		}
+		m_population = temp;
+	}
+	m_Selector->createNextGen(m_population);
+
+	TTTPlayer* mRandomPlayer = new TTTRandomPlayer(); 
+	std::map<int, int> myDistribution1;
+	std::map<int, int> myDistribution2;
+	for (int i : m_Selector->getDictionary().getValidBoards()) {
+		myDistribution1[i] = 0;
+		myDistribution2[i] = 0;
+	}
+	for (auto member : m_population) {
+		for (int i = 0; i < 2500; i++) {
+			m_Selector->playWithDistribution(member, mRandomPlayer, 1, myDistribution1);
+			m_Selector->playWithDistribution(member, mRandomPlayer, 2, myDistribution2);
+		}
+	}
+
+	std::string DistributionsOut1 = m_outfilePath + "Distributions/" + getFilePrefix() + "-PopVsRandDist.csv";
+	std::string DistributionsOut2 = m_outfilePath + "Distributions/" + getFilePrefix() + "-RandVsPopDist.csv";
+
+	std::ofstream DistributionsFile1(DistributionsOut1);
+	if (DistributionsFile1.is_open())
+	{
+		DistributionsFile1 << "Board, FrequencyCount\n";
+		for (auto item : myDistribution1) {
+			DistributionsFile1 << item.first << "," << item.second << "\n";
+		}
+	}
+
+	std::ofstream DistributionsFile2(DistributionsOut2);
+	if (DistributionsFile2.is_open())
+	{
+		DistributionsFile2 << "Board, FrequencyCount\n";
+		for (auto item : myDistribution2) {
+			DistributionsFile2 << item.first << "," << item.second << "\n";
+		}
+	}
+
 	std::string LODOut = m_outfilePath;
 	std::string PopulationOut = m_outfilePath;
 	LODOut += "LinesOfDescent/";
@@ -157,9 +222,10 @@ void PopulationController::setSelector(std::string metSel){
 	}
 }
 
-void PopulationController::setupPopulation() {
+void PopulationController::setupPopulation(std::vector<int> whichMasks) {
 	int genIDctr = 0;
-	BoardDictionary myRef = BoardDictionary(); 
+	BoardDictionary myRef = BoardDictionary(whichMasks); 
+	m_sizeStrategy = myRef.getReducedSize() * 2; 
 	while (m_population.size() < m_sizePopulation) {
 		m_population.push_back(std::make_shared<Strategy>(m_distributionStrategy, genIDctr, m_sizeStrategy, myRef, m_Mutator));
 	}

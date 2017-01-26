@@ -18,80 +18,82 @@ std::vector<std::shared_ptr<Strategy>> RouletteSelector::createNextGen(std::vect
 	double maxFitness = 0.0; 
 	std::vector<double> fitnessArray = std::vector<double>(oldGeneration.size(), 0.0); 
 	for(int i = 0; i < oldGeneration.size(); i++){
-		for (int j = 0; j < oldGeneration.size(); j++) {
-			double value = play(oldGeneration[i], oldGeneration[j], 1);
-			if (value > 0) {
-				fitnessArray[i] += m_winVal;
-				oldGeneration[i]->win++;
-				oldGeneration[i]->winPop++;
+		if (m_gamesVsRandom > 0) {
+			for (int j = 0; j < m_gamesVsRandom; j++) {
+				double value = play(oldGeneration[i], m_randomPlayer, Random::getInt(1, 2));
+				if (value > 0) {
+					fitnessArray[i] += m_winVal;
+					oldGeneration[i]->win++;
+					oldGeneration[i]->winRand++;
+				}
+				else if (value < 0) {
+					fitnessArray[i] += m_lossVal;
+					oldGeneration[i]->loss++;
+					oldGeneration[i]->lossRand++;
+				}
+				else {
+					fitnessArray[i] += m_drawVal;
+					oldGeneration[i]->draw++;
+					oldGeneration[i]->drawRand++;
+				}
 			}
-			else if (value < 0) {
-				fitnessArray[i] += m_lossVal;
-				oldGeneration[i]->loss++;
-				oldGeneration[i]->lossPop++;
-			}
-			else {
-				fitnessArray[i] += m_drawVal;
-				oldGeneration[i]->draw++;
-				oldGeneration[i]->drawPop++;
-			}
-
-			/*
-			value = play(oldGeneration[i], oldGeneration[j], 2);
-			if (value > 0) {
-				fitnessArray[i] += m_winVal;
-				oldGeneration[i]->win++;
-				oldGeneration[i]->winPop++;
-			}
-			else if (value < 0) {
-				fitnessArray[i] += m_lossVal;
-				oldGeneration[i]->loss++;
-				oldGeneration[i]->lossPop++;
-			}
-			else {
-				fitnessArray[i] += m_drawVal;
-				oldGeneration[i]->draw++;
-				oldGeneration[i]->drawPop++;
-			}
-			*/
-
-			/*
-			double value = play(oldGeneration[i], oldGeneration[j], Random::getInt(1, 2));
-			if (value > 0) {
-				fitnessArray[i] += m_winVal;
-				oldGeneration[i]->win++;
-				oldGeneration[i]->winPop++;
-			}
-			else if (value < 0) {
-				fitnessArray[i] += m_lossVal;
-				oldGeneration[i]->loss++;
-				oldGeneration[i]->lossPop++;
-			}
-			else {
-				fitnessArray[i] += m_drawVal;
-				oldGeneration[i]->draw++;
-				oldGeneration[i]->drawPop++;
-			}
-			*/
-
 		}
+		else {
+			for (int j = 0; j < oldGeneration.size(); j++) {
+				double value = play(oldGeneration[i], oldGeneration[j], 1);
+				if (value > 0) {
+					fitnessArray[i] += m_winVal;
+					oldGeneration[i]->win++;
+					oldGeneration[i]->winPop++;
+				}
+				else if (value < 0) {
+					fitnessArray[i] += m_lossVal;
+					oldGeneration[i]->loss++;
+					oldGeneration[i]->lossPop++;
+				}
+				else {
+					fitnessArray[i] += m_drawVal;
+					oldGeneration[i]->draw++;
+					oldGeneration[i]->drawPop++;
+				}
 
-		for (int j = 0; j < m_gamesVsRandom; j++) {
-			double value = play(oldGeneration[i], m_randomPlayer, Random::getInt(1, 2));
-			if (value > 0) {
+				/*
+				value = play(oldGeneration[i], oldGeneration[j], 2);
+				if (value > 0) {
 				fitnessArray[i] += m_winVal;
 				oldGeneration[i]->win++;
-				oldGeneration[i]->winRand++;
-			}
-			else if (value < 0) {
+				oldGeneration[i]->winPop++;
+				}
+				else if (value < 0) {
 				fitnessArray[i] += m_lossVal;
 				oldGeneration[i]->loss++;
-				oldGeneration[i]->lossRand++;
-			}
-			else {
+				oldGeneration[i]->lossPop++;
+				}
+				else {
 				fitnessArray[i] += m_drawVal;
 				oldGeneration[i]->draw++;
-				oldGeneration[i]->drawRand++;
+				oldGeneration[i]->drawPop++;
+				}
+				*/
+
+				/*
+				double value = play(oldGeneration[i], oldGeneration[j], Random::getInt(1, 2));
+				if (value > 0) {
+				fitnessArray[i] += m_winVal;
+				oldGeneration[i]->win++;
+				oldGeneration[i]->winPop++;
+				}
+				else if (value < 0) {
+				fitnessArray[i] += m_lossVal;
+				oldGeneration[i]->loss++;
+				oldGeneration[i]->lossPop++;
+				}
+				else {
+				fitnessArray[i] += m_drawVal;
+				oldGeneration[i]->draw++;
+				oldGeneration[i]->drawPop++;
+				}
+				*/
 			}
 		}
 

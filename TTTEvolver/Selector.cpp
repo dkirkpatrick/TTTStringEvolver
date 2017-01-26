@@ -92,6 +92,87 @@ int Selector::play(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2, i
 	}
 }
 
+int Selector::playWithDistribution(std::shared_ptr<Strategy> s1, TTTPlayer* myPlayer, int startPlayer, std::map<int, int>& playDistribution) {
+	TTTGame myGame = TTTGame(3);
+
+	if (m_startAdvantage) {
+		myGame.play(4, 1);
+	}
+
+	// Assign player to brain, opponent
+	int s1Plays = startPlayer;
+	int TTTPlayerPlays = (s1Plays == 2 ? 1 : 2);
+	bool whoPlays = (TTTPlayerPlays == 1);
+	int i = 0;
+	// Handles the result until a conclusion is reached 
+	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 20) {
+		i++;
+		playDistribution[myRef.dict().at(myGame.base3Board()).at(0)]++;
+		if (whoPlays) {
+			std::vector<int> otherPlay = myPlayer->getPlay(myGame, TTTPlayerPlays);
+			myGame.play(otherPlay.at(0), otherPlay.at(1), TTTPlayerPlays);
+			whoPlays = false;
+		}
+		else {
+			int myPlay = getPlay(s1, myGame, s1Plays);
+			myGame.play(myPlay, s1Plays);
+			whoPlays = true;
+		}
+	}
+
+	// Outputs based on game results 
+	if (myGame.gameDraw()) {
+		return 0;
+	}
+	else if (myGame.gameWon() == s1Plays) {
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
+int Selector::playWithDistribution(std::shared_ptr<Strategy> s1, std::shared_ptr<Strategy> s2, int startPlayer, std::map<int, int>& playDistribution) {
+	int playCount = 0;
+	TTTGame myGame = TTTGame(3);
+
+	if (m_startAdvantage) {
+		myGame.play(4, 1);
+	}
+
+	// Assign player to brain, opponent
+	int s1Plays = startPlayer;
+	int s2Plays = (s1Plays == 2 ? 1 : 2);
+	bool whoPlays = (s2Plays == 1);
+	int i = 0;
+	// Handles the result until a conclusion is reached 
+	while (myGame.gameWon() == 0 && !myGame.gameDraw() && i < 18) {
+		i++;
+		playDistribution[myRef.dict().at(myGame.base3Board()).at(0)]++;
+		if (whoPlays) {
+			int otherPlay = getPlay(s2, myGame, s2Plays);
+			myGame.play(otherPlay, s2Plays);
+			whoPlays = false;
+		}
+		else {
+			int myPlay = getPlay(s1, myGame, s1Plays);
+			myGame.play(myPlay, s1Plays);
+			whoPlays = true;
+		}
+	}
+
+	// Outputs based on game results 
+	if (myGame.gameDraw()) {
+		return 0;
+	}
+	else if (myGame.gameWon() == s1Plays) {
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
 int Selector::getPlay(std::shared_ptr<Strategy> s, TTTGame& mGame, int whichPlayer) {
 	std::vector<int> lookup = myRef.dict().at(mGame.base3Board());
 	std::vector<int> permute = mGame.getInversePermutation(myRef.getMask(lookup.at(1)));

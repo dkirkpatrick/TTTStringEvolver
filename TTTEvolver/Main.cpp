@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
 	int outputInterval;
 	bool startAdvantage; 
 	int gamesVsRandom;
-
+	std::vector<int> myMasks = {};
 	//Reads in arguments if present
 	if (argc > 1){
 		if (argc < 10){
@@ -78,6 +78,11 @@ int main(int argc, char* argv[]){
 				startAdvantage = false;
 			}
 			gamesVsRandom = atoi(argv[9]);
+			if (atoi(argv[10]) != -1) {
+				for (int i = 4; i < argc; i++) {
+					myMasks.push_back(atoi(argv[i]));
+				}
+			}
 		}
 	}
 	else{
@@ -94,7 +99,6 @@ int main(int argc, char* argv[]){
 
 	Random::getCommonGenerator().seed(randomSeed); 
 	
-	int sizeStrategy = 3164;
 	std::string distributionStrategy = "validRand";
 	std::string methodMutation = "validPoint";
 	//double rateMutation = 0.001;
@@ -102,10 +106,9 @@ int main(int argc, char* argv[]){
 	std::string methodSelection = "roulette"; 
 	double rateSelection = 0.40; 
 	int numEvals = 1; 
-
-	PopulationController m_controller(sizePopulation, sizeStrategy, distributionStrategy, numGenerations, outputInterval, outfilePath,
+	PopulationController m_controller(sizePopulation, myMasks, distributionStrategy, numGenerations, outputInterval, outfilePath,
 		methodMutation, rateMutation, methodSelection, rateSelection, numEvals, winval, drawval, randomSeed, startAdvantage, gamesVsRandom);
-	m_controller.runLODOnly(); 
+	m_controller.runLODandDistributions();
 
 	std::cout << "Done" << std::endl; 
 
